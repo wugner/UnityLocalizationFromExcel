@@ -1,6 +1,8 @@
 ﻿using Wugner.OpenXml;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using ExcelDataReader;
 
 namespace Wugner.Localize
 {
@@ -14,7 +16,40 @@ namespace Wugner.Localize
 
 		Dictionary<string, VocabularyEntryMap> _multiLanguageData = new Dictionary<string, VocabularyEntryMap>();
 
-		public Dictionary<string, VocabularyEntryMap> ReadText(IEnumerable<string> xmlTexts)
+		public Dictionary<string, VocabularyEntryMap> LoadFiles(IEnumerable<string> filePaths)
+		{
+			foreach (var filePath in filePaths)
+			{
+				if (string.IsNullOrEmpty(filePath))
+					continue;
+
+				try
+				{
+					if (filePath.EndsWith("xml"))
+					{
+						TryLoadXml(filePath);
+					}
+					else
+					{
+						TryLoadExcelOrCsv(filePath);
+					}
+				}
+				catch (IOException ioException)
+				{
+					Debug.LogException(ioException);
+				}
+				catch (System.Exception ex)
+				{
+					Debug.LogErrorFormat("File format is not valid! [{0}]", filePath);
+					Debug.LogException(ex);
+				}
+			}
+
+			CheckMissingLanguageVocabulary();
+			return _multiLanguageData;
+		}
+
+		public Dictionary<string, VocabularyEntryMap> LoadXmlFiles(IEnumerable<string> xmlTexts)
 		{
 			foreach (var xml in xmlTexts)
 			{
@@ -28,8 +63,51 @@ namespace Wugner.Localize
 			}
 
 			CheckMissingLanguageVocabulary();
-
 			return _multiLanguageData;
+		}
+
+		void TryLoadXml(string filePath)
+		{
+			var excel = new OpenXmlParser();
+			excel.LoadFromPath(filePath);
+
+			foreach (var kv in excel)
+			{
+				AnalizeSheet(kv.Value);
+			}
+		}
+
+		void TryLoadExcelOrCsv(string filePath)
+		{
+			using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+			{
+				using (var reader = ExcelReaderFactory.CreateReader(stream))
+				{
+					var data = new List<List<string>>();
+					do
+					{
+						if (reader.RowCount == 0)
+							continue;
+
+						while (reader.Read())
+						{
+							var count = reader.FieldCount;
+							if (count == 0)
+								continue;
+
+							var rowData = new List<string>();
+							for (var i = 0; i < count; i++)
+							{
+								rowData.Add(reader.GetString(i));
+							}
+							data.Add(rowData);
+						}
+					} while (reader.NextResult());
+
+					var sheet = new ExcelSheet(data);
+					AnalizeSheet(sheet);
+				}
+			}
 		}
 
 		void AnalizeSheet(ExcelSheet sheet)

@@ -5,16 +5,13 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public interface ILocalizationSpritesManager
-	{
-		Sprite GetSprite(string path);
-		void GetSpriteAsync(string path, Action<Sprite> callback);
-		void UnloadSprite(Sprite sp);
-	}
-
-	public class LocalizationSpritesManager : MonoBehaviour, ILocalizationSpritesManager
+	public class DefaultSpriteManager : MonoBehaviour, ILocalizationSpriteManager
 	{
 		Dictionary<Sprite, int> _referenceCounter = new Dictionary<Sprite, int>();
+
+		public void Init()
+		{
+		}
 
 		public virtual Sprite GetSprite(string path)
 		{

@@ -28,7 +28,13 @@ namespace Wugner.OpenXml
 				return _stringValuesWithHeader;
 			}
 		}
-
+		public ExcelRow(List<string> data, ExcelSheet sheet, int row)
+		{
+			for (var i = 0; i < data.Count; i++)
+			{
+				Add(new ExcelCell(data[i], row, i + 1));
+			}
+		}
 		public ExcelRow(XmlNode xmlNode, ExcelSheet sheet, int row)
 		{
 			this.Sheet = sheet;
@@ -36,7 +42,7 @@ namespace Wugner.OpenXml
 
 			var list = xmlNode.SelectNodes("ns:Cell", this.Sheet.openXmlReader.nsMgr);
 
-			int column = 0;
+			int column = 1;
 			foreach (XmlNode n in list)
 			{
 				var attrIndex = GetAttributeIndex(n, column);

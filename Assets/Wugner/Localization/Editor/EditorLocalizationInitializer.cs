@@ -40,19 +40,33 @@ namespace Wugner.Localize
 			return ret;
 		}
 
+		//[MenuItem("Localization/ttttttt")]
+		//static void GGGGG()
+		//{
+		//	var config = LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
+		//	var t = AssetDatabase.GetAssetPath(config.LocalizeExcelFiles[0]);
+		//	Debug.Log(t);
+
+		//	Debug.Log(Application.dataPath);
+		//}
+
 		[MenuItem("Localization/ReloadXML")]
 		static void ReloadXmlFiles()
 		{
+			var filePaths = new List<string>();
+
 			var config = LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
-			var xmlfiles = config.LocalizeXmlFiles.Select(x => x.text);
-			if (xmlfiles.Count() == 0)
+			filePaths.AddRange(config.LocalizeExcelFiles.Select(f => Application.dataPath + AssetDatabase.GetAssetPath(f).Substring(6)));
+			filePaths.AddRange(config.LocalizeExcelFilePaths.Select(p => Application.dataPath + "/" + p));
+
+			if (filePaths.Count == 0)
 			{
 				Debug.LogWarningFormat("No input xml files!");
 				return;
 			}
 
 			var reader = new LocalizationXmlReader();
-			var languageToVocabularyMap = reader.ReadText(xmlfiles);
+			var languageToVocabularyMap = reader.LoadFiles(filePaths);
 
 			if (languageToVocabularyMap.Count == 0)
 			{
@@ -71,7 +85,7 @@ namespace Wugner.Localize
 			AssetDatabase.SaveAssets();
 			EditorMultiLanguageEntryCollection.Reload();
 
-			EditorConstantFileGenerater.CreateSourceFile(languageToVocabularyMap.First().Value, "Wuger.Localize", "LocalizationID");
+			EditorConstantFileGenerater.CreateSourceFile(languageToVocabularyMap.First().Value, config.IdConstantNameSpace, config.IdConstantClassName);
 		}
 	}
 }

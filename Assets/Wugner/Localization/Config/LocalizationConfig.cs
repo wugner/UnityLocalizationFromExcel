@@ -20,12 +20,12 @@ namespace Wugner.Localize
 		public List<LanguageInfo> LanguageSettings { get { return _languageSettings; } }
 		
 		[SerializeField]
-		List<TextAsset> _localizeXmlFiles = new List<TextAsset>();
-		public List<TextAsset> LocalizeXmlFiles { get { return _localizeXmlFiles; } }
-
+		List<Object> _localizeExcelFiles = new List<Object>();
+		public List<Object> LocalizeExcelFiles { get { return _localizeExcelFiles; } }
+		
 		[SerializeField]
-		List<string> _localizeXmlPaths = new List<string>();
-		public List<string> LocalizeXmlPaths { get { return _localizeXmlPaths; } }
+		List<string> _localizeExcelFilePaths = new List<string>();
+		public List<string> LocalizeExcelFilePaths { get { return _localizeExcelFilePaths; } }
 
 		[SerializeField]
 		List<Font> _allFonts = new List<Font>();
@@ -40,7 +40,11 @@ namespace Wugner.Localize
 		public string IdConstantClassName { get { return _idConstantClassName; } }
 
 		[SerializeField]
-		string _customSpritesManager;
-		public string CustomSpritesManager { get { return _customSpritesManager; } }
+		string _customSpriteManager;
+		public string CustomSpriteManager { get { return _customSpriteManager; } }
+
+		[SerializeField]
+		string _customFontManager;
+		public string CustomFontManager { get { return _customFontManager; } }
 	}
 }

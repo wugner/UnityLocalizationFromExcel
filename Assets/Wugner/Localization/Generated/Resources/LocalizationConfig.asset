@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Name: LocalizationConfig
   m_EditorClassIdentifier: 
   _languageSettings: []
-  _localizeXmlFiles: []
-  _localizeXmlPaths: []
+  _localizeExcelFiles:
+  - {fileID: 102900000, guid: 878700b4c24379343b04487568c37359, type: 3}
+  _localizeExcelFilePaths: []
   _allFonts: []
   _idConstantNameSpace: 
   _idConstantClassName: 
-  _customSpritesManager: 
+  _customSpriteManager: 
+  _customFontManager: 

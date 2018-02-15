@@ -30,33 +30,27 @@ namespace Wugner.Localize
 				_staticInstance.Init();
 			}
 		}
+		
+		ILocalizationSpriteManager _spriteManager;
+		public ILocalizationSpriteManager SpriteManager { get { return _spriteManager; } }
+		ILocalizationFontManager _fontManager;
+		public ILocalizationFontManager FontManager { get { return _fontManager; } }
+		ILocalizationVocabularyManager _vocabularyManager;
 
-		public struct Entry
-		{
-			public string ID;
-			public string Content;
-			public string FontName;
-		}
-
-		ILocalizationSpritesManager _spritesManager;
-		public ILocalizationSpritesManager SpritesManager { get { return _spritesManager; } }
-
-		Dictionary<string, Dictionary<string, Entry>> _languageToEntryMap = new Dictionary<string, Dictionary<string, Entry>>();
-		Dictionary<string, Font> _fontMap = new Dictionary<string, Font>();
-		Dictionary<string, Font> _defaultFontMap = new Dictionary<string, Font>();
-
-		Dictionary<string, Entry> _currentVacabularies;
+		string _currentLanguage;
 		Font _currentDefaultFont;
+		Dictionary<string, RuntimeVocabularyEntry> _currentVacabularies;
+
 		public static Font CurrentDefaultFont { get { return Instance._currentDefaultFont; } }
 
-		public static Entry Get(string id)
+		public static RuntimeVocabularyEntry Get(string id)
 		{
-			Entry ret;
+			RuntimeVocabularyEntry ret;
 			if (Instance._currentVacabularies.TryGetValue(id, out ret))
 			{
 				return ret;
 			}
-			throw new Exception("Can not get localize data for id " + id);
+			throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id, Instance._currentLanguage));
 		}
 
 		void Init()
@@ -72,106 +66,89 @@ namespace Wugner.Localize
 		{
 			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
 			
-			if (!string.IsNullOrEmpty(config.CustomSpritesManager))
+			if (!string.IsNullOrEmpty(config.CustomSpriteManager))
 			{
 				object spm = null;
-				var type = Type.GetType(config.CustomSpritesManager);
+				var type = Type.GetType(config.CustomSpriteManager);
 				if (type.IsSubclassOf(typeof(MonoBehaviour)))
 					spm = gameObject.AddComponent(type);
 				else
 					spm = Activator.CreateInstance(type);
 
-				if (spm is ILocalizationSpritesManager)
-					_spritesManager = spm as ILocalizationSpritesManager;
+				if (spm is ILocalizationSpriteManager)
+					_spriteManager = spm as ILocalizationSpriteManager;
 				else
-					Debug.LogErrorFormat("Custom sprites manager [{0}] does not implement ILocalizationSpritesManager!");
+					Debug.LogErrorFormat("Custom sprites manager [{0}] does not implement ILocalizationSpritesManager!", config.CustomSpriteManager);
 			}
 			else
 			{
-				_spritesManager = gameObject.AddComponent<LocalizationSpritesManager>();
+				_spriteManager = gameObject.AddComponent<DefaultSpriteManager>();
 			}
+
+			if (_spriteManager != null)
+				_spriteManager.Init();
+		}
+
+		void InitFont()
+		{
+			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
+			var customFontManager = config.CustomFontManager;
+			if (!string.IsNullOrEmpty(customFontManager))
+			{
+				object spm = null;
+				var type = Type.GetType(customFontManager);
+				if (type.IsSubclassOf(typeof(MonoBehaviour)))
+					spm = gameObject.AddComponent(type);
+				else
+					spm = Activator.CreateInstance(type);
+
+				if (spm is ILocalizationFontManager)
+					_fontManager = spm as ILocalizationFontManager;
+				else
+					Debug.LogErrorFormat("Custom font manager [{0}] does not implement ILocalizationSpritesManager!", customFontManager);
+			}
+			else
+			{
+				_fontManager = new DefaultFontManager();
+			}
+
+			if (_fontManager != null)
+				_fontManager.Init();
 		}
 
 		void InitVocabulary()
 		{
-			var entries = Resources.Load<VocabulariesAsset>("LocalizationVocabularies");
+			_vocabularyManager = new DefaultVocabularyManager();
 
-			foreach (var entry in entries.VocabularyEntries)
-			{
-				Dictionary<string, Entry> temp;
-				if (!_languageToEntryMap.TryGetValue(entry.Language, out temp))
-				{
-					temp = new Dictionary<string, Entry>();
-					_languageToEntryMap.Add(entry.Language, temp);
-				}
 
-				temp.Add(entry.ID, new Entry()
-				{
-					ID = entry.ID,
-					Content = entry.Content,
-					FontName = entry.FontName,
-				});
-			}
+			if (_vocabularyManager != null)
+				_vocabularyManager.Init();
 		}
-		
 
-		void InitFont()
-		{
-			var settings = Resources.Load<LocalizationConfig>("LocalizationConfig");
-			foreach (var fo in settings.AllFonts)
-			{
-				_fontMap.Add(fo.name, fo);
-			}
-			foreach (var languageSettings in settings.LanguageSettings)
-			{
-				var language = languageSettings.Language;
-				var font = languageSettings.DefaultFont != null ? languageSettings.DefaultFont : GetFont(languageSettings.DefaultFontName);
-				if (font != null)
-				{
-					_defaultFontMap.Add(language, font);
-					if (!_fontMap.ContainsKey(font.name))
-						_fontMap.Add(font.name, font);
-				}
-			}
-		}
-		
 		public void SwitchLanguage(string language)
 		{
-			Dictionary<string, Entry> v;
-			if (!_languageToEntryMap.TryGetValue(language, out v))
+			_currentVacabularies = _vocabularyManager.GetByLanguage(language);
+			if (_currentVacabularies == null)
 			{
 				Debug.LogErrorFormat("Can not find language [{0}]", language);
-				return;
 			}
-			_currentVacabularies = v;
-
-			Font f;
-			if (!_defaultFontMap.TryGetValue(language, out f))
+			_currentDefaultFont = _fontManager.GetLanguageDefaultFont(language);
+			if (_currentDefaultFont == null)
 			{
 				Debug.LogWarningFormat("Can not find font for language [{0}], use arial", language);
-				f = Font.CreateDynamicFontFromOSFont("arial", 12);
+				_currentDefaultFont = Font.CreateDynamicFontFromOSFont("arial", 12);
 			}
-			_currentDefaultFont = f;
 		}
 
 		public static Font GetFont(string fontName)
 		{
 			if (string.IsNullOrEmpty(fontName))
-			{
-				Debug.LogErrorFormat("font name is empty! use default font", Instance._currentDefaultFont.name);
 				return Instance._currentDefaultFont;
-			}
 
-			Font f;
-			if (!Instance._fontMap.TryGetValue(fontName, out f))
-			{
-				f = Font.CreateDynamicFontFromOSFont(fontName, 12);
-				if (f == null)
-				{
-					Debug.LogErrorFormat("Can not find font [{0}], use default {1}", fontName, Instance._currentDefaultFont.name);
-					f = Instance._currentDefaultFont;
-				}
-			}
+			var f = Instance._fontManager.GetFont(fontName);
+			if (f == null)
+				Debug.LogErrorFormat("Can not find font named [{0}], use default [{1}]", fontName, Instance._currentDefaultFont);
+
 			return f;
 		}
 	}

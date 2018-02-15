@@ -17,6 +17,15 @@ namespace Wugner.OpenXml
 
 		List<string> _headers = new List<string>();
 
+		public ExcelSheet(List<List<string>> data)
+		{
+			for (int i = 0; i < data.Count; i++)
+			{
+				var node = data[i];
+				Add(new ExcelRow(node, this, i + 1));
+			}
+		}
+
 		public ExcelSheet(XmlNode xmlNode, OpenXmlParser xmlReader)
 		{
 			openXmlReader = xmlReader;
@@ -25,7 +34,7 @@ namespace Wugner.OpenXml
 			for (int i = 0; i < list.Count; i++)
 			{
 				var node = list[i];
-				Add(new ExcelRow(node, this, i));
+				Add(new ExcelRow(node, this, i + 1));
 			}
 
 			RemoveAll(r => r.Count == 0);
