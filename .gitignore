@@ -1,0 +1,19 @@
+/Temp
+/Library
+/.vs
+
+/*.sln
+/*.csproj
+
+/Assets/Gizmos
+/Assets/Gizmos.meta
+/Assets/iTween
+/Assets/iTween.meta
+/Assets/PlayMaker/Editor/Install
+/Assets/PlayMaker/Editor/Install.meta
+/Assets/PlayMaker/Versions
+/Assets/PlayMaker/Versions.meta
+
+# Personal
+/Assets/_Personal
+/Assets/_Personal.meta
