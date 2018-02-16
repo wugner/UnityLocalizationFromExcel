@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using ExcelDataReader;
+using System.Linq;
 
 namespace Wugner.Localize
 {
@@ -16,7 +17,7 @@ namespace Wugner.Localize
 
 		Dictionary<string, VocabularyEntryMap> _multiLanguageData = new Dictionary<string, VocabularyEntryMap>();
 
-		public Dictionary<string, VocabularyEntryMap> LoadFiles(IEnumerable<string> filePaths)
+		public List<VocabularyEntryMap> LoadFiles(IEnumerable<string> filePaths)
 		{
 			foreach (var filePath in filePaths)
 			{
@@ -46,7 +47,7 @@ namespace Wugner.Localize
 			}
 
 			CheckMissingLanguageVocabulary();
-			return _multiLanguageData;
+			return _multiLanguageData.Values.ToList();
 		}
 
 		public Dictionary<string, VocabularyEntryMap> LoadXmlFiles(IEnumerable<string> xmlTexts)

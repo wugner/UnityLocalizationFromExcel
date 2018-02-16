@@ -5,7 +5,7 @@ using UnityEditor;
 namespace Wugner.Localize
 {
 	[CustomEditor(typeof(LocalizationConfig))]
-	public class LocalizationConfigEditor : Editor
+	public class LocalizationConfigInspector : Editor
 	{
 		const string GENERATED_FOLDERPATH = "Wugner/Localization/Generated";
 		const string CONFIG_ASSETPATH = "Assets/Wugner/Localization/Generated/LocalizationConfig.asset";

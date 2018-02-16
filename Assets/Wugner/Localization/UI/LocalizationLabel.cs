@@ -11,6 +11,7 @@ namespace Wugner.Localize
 		bool _setAtRuntime;
 		[SerializeField]
 		string _id;
+		object[] _params;
 
 		Text _text;
 		Text TextComponent
@@ -29,14 +30,28 @@ namespace Wugner.Localize
 		{
 			if (!_setAtRuntime && !_areadyHasValue)
 				Set(_id);
+
+			Localization.AddOnSwitchLanguageDelegate(OnSwitchLanguage);
+		}
+
+		private void OnDestroy()
+		{
+			Localization.RemoveOnSwitchLanguageDelegate(OnSwitchLanguage);
+		}
+
+		void OnSwitchLanguage()
+		{
+			if (_areadyHasValue)
+				Set(_id, _params);
 		}
 
 		public void Set(string id, params object[] objs)
 		{
 			_areadyHasValue = true;
 			_id = id;
+			_params = objs;
 
-			var entry = Localization.Get(_id);
+			var entry = Localization.GetEntry(_id);
 
 			if (string.IsNullOrEmpty(entry.FontName))
 				TextComponent.font = Localization.CurrentDefaultFont;

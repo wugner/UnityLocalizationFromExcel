@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System;
 
 namespace Wugner.Localize
 {
@@ -12,80 +13,47 @@ namespace Wugner.Localize
 		{
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
 				return;
-						
-			LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
+
+			EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
 			EditorMultiLanguageEntryCollection.Reload();
 		}
 
-		[MenuItem("Localization/Config")]
+		[MenuItem("Localization/Open Config")]
 		static void OpenConfig()
 		{
-			var config = LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
+			var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
 			Selection.activeObject = config;
 		}
-
-		static T LoadOrCreateAsset<T>(string path) where T : ScriptableObject
+		
+		[MenuItem("Localization/ReloadImportFiles")]
+		static void ReimportVocabularyFiles()
 		{
-			var ret = AssetDatabase.LoadAssetAtPath<T>(path);
-			if (ret == null)
+			IEditorVocabularyImporter vocabularyImpoter = null;
+
+			var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
+			var customEditorVocabularyImporterStr = config.CustomEditorVocabularyImpoter;
+			if (string.IsNullOrEmpty(customEditorVocabularyImporterStr))
 			{
-				if (!AssetDatabase.IsValidFolder(Localization.RESOURCES_FOLDER))
+				vocabularyImpoter = new DefaultEditorVocabularyImporter();
+			}
+			else
+			{
+				var type = Type.GetType(customEditorVocabularyImporterStr);
+				if (type == null)
 				{
-					System.IO.Directory.CreateDirectory(Application.dataPath + "/" + Localization.RESOURCES_FOLDER);
-					AssetDatabase.Refresh();
+					Debug.LogErrorFormat("Can not find custom editor vocabulary importer named [{0}]", customEditorVocabularyImporterStr);
+					return;
 				}
-				ret = ScriptableObject.CreateInstance<T>();
-				AssetDatabase.CreateAsset(ret, path);
-			}
-			return ret;
-		}
+				vocabularyImpoter = Activator.CreateInstance(type) as IEditorVocabularyImporter;
 
-		//[MenuItem("Localization/ttttttt")]
-		//static void GGGGG()
-		//{
-		//	var config = LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
-		//	var t = AssetDatabase.GetAssetPath(config.LocalizeExcelFiles[0]);
-		//	Debug.Log(t);
-
-		//	Debug.Log(Application.dataPath);
-		//}
-
-		[MenuItem("Localization/ReloadXML")]
-		static void ReloadXmlFiles()
-		{
-			var filePaths = new List<string>();
-
-			var config = LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
-			filePaths.AddRange(config.LocalizeExcelFiles.Select(f => Application.dataPath + AssetDatabase.GetAssetPath(f).Substring(6)));
-			filePaths.AddRange(config.LocalizeExcelFilePaths.Select(p => Application.dataPath + "/" + p));
-
-			if (filePaths.Count == 0)
-			{
-				Debug.LogWarningFormat("No input xml files!");
-				return;
+				if (vocabularyImpoter == null)
+				{
+					Debug.LogErrorFormat("Custom editor vocabulary importer [{0}] does not implement interface IEditorVocabularyImporter", customEditorVocabularyImporterStr);
+					return;
+				}
 			}
 
-			var reader = new LocalizationXmlReader();
-			var languageToVocabularyMap = reader.LoadFiles(filePaths);
-
-			if (languageToVocabularyMap.Count == 0)
-			{
-				Debug.LogWarningFormat("Can not read any vocabulary!");
-				return;
-			}
-
-			foreach (var kv in languageToVocabularyMap)
-			{
-				var vocabularyMap = kv.Value;
-				var vocabularyAsset = LoadOrCreateAsset<VocabulariesAsset>(string.Format(Localization.ASSETPATH_VOCABULARY, vocabularyMap.Language));
-				vocabularyAsset.VocabularyEntries.Clear();
-				vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap);
-			}
-
-			AssetDatabase.SaveAssets();
-			EditorMultiLanguageEntryCollection.Reload();
-
-			EditorConstantFileGenerater.CreateSourceFile(languageToVocabularyMap.First().Value, config.IdConstantNameSpace, config.IdConstantClassName);
+			vocabularyImpoter.ImportFiles();
 		}
 	}
 }

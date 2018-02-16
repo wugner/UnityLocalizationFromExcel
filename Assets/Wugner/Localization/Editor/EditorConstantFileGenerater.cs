@@ -14,12 +14,14 @@ namespace Wugner.Localize
 			var list = data.Select(t => new IDWithComment(t.ID, t.Remark)).ToList();
 			var str = GenerateFileContent(list, @namespace, baseClassName);
 
-			var fileFullPath = Application.dataPath + "/Wugner/Localization/Generated/LocalizationID.cs";
+			var fileFullPath = Application.dataPath + Localization.CONSTANT_ID_FILE.Substring(6);
 			var directory = Directory.GetParent(fileFullPath);
 			if (!Directory.Exists(directory.FullName))
 				Directory.CreateDirectory(directory.FullName);
 
 			File.WriteAllText(fileFullPath, str);
+
+			Debug.Log("Generated id constant file. " + Localization.CONSTANT_ID_FILE);
 
 			AssetDatabase.Refresh();
 		}
@@ -49,8 +51,6 @@ namespace Wugner.Localize
 
 			AppendLineWithIndent(str, 1, "}");
 			AppendLineWithIndent(str, 0, "}");
-
-			Debug.Log(str.ToString());
 
 			return str.ToString();
 		}

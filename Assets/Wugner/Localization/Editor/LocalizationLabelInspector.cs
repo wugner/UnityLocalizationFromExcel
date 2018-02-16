@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace Wugner.Localize
 {
 	[CustomEditor(typeof(LocalizationLabel))]
-	public class LocalizationLabelEditor : Editor
+	public class LocalizationLabelInspector : Editor
 	{
 		public override void OnInspectorGUI()
 		{

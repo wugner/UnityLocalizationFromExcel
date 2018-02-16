@@ -46,5 +46,14 @@ namespace Wugner.Localize
 		[SerializeField]
 		string _customFontManager;
 		public string CustomFontManager { get { return _customFontManager; } }
+
+		[SerializeField]
+		string _customVocabularyManager;
+		public string CustomVocabularyManager { get { return _customVocabularyManager; } }
+
+		[SerializeField]
+		string _customEditorVocabularyImporter;
+		public string CustomEditorVocabularyImpoter { get { return _customEditorVocabularyImporter; } }
+
 	}
 }
