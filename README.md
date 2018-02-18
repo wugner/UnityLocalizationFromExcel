@@ -49,8 +49,8 @@ Will add soon.
 		}
 	}
 	```
-- "**TYPE**" is used to specify the type of text or sprite. The keyword is "Text" and "Image", based on the enum VocabularyEntryType.
-		The type sprite will not be displayed in the selection of LocalizaitonText.
+- "**TYPE**" is used to specify the type of text or sprite. The keyword is "Text" and "Image", based on the enum "VocabularyEntryType".
+		The type "Image" will not be displayed in the selection of LocalizaitonText.
 - "**CONTENT_**" is a prefix which should followed by a language name such as en or jp or what ever you like.  
 	- The data in this column is the actual text to display in text mode, or a sprite name in sprite mode.  
 	- You can set more than one content for multiple languages in one sheet, like the samples files in the project. Be sure these language names are the same if you seperate your data in multiple sheets or files.  
