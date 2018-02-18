@@ -10,12 +10,12 @@ Below are the main features.
 
 ## Quick Start
 1. First of all, create vocabulary files. You can find the sample format files in 
-	> /Assets/Wugner/Localization/Samples/.  
+	> /Assets/Wugner/Localization/Samples/
 	
 	The first row is the header row and the headers's names are fixed, although you can change the order, and add more languages or reduce languages.
 	
 2. Find the config asset by clicking the menu "Localization/Config" or manually locate it in 
-	> /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset.  
+	> /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
 	
 	You can add the files by drag them into "Localiza Excel Files" field if they are in your unity project, or add relative path to "**Localize Excel File Paths**" field.  
 	When you use the relative path, you can specify the file full path, or a directory which meams all files under this directory include sub directories will be imported.
@@ -24,7 +24,7 @@ Below are the main features.
 	> "/Assets/Wugner/Localization/Generated/Resources/"  
 	
 	folder, also the constant C# source file will be generated in 
-	> "/Assets/Wugner/Localization/Generated/" folder.
+	> "/Assets/Wugner/Localization/Generated/" folder
 	
 4. Create a ui Text component under Canvas, add the "LocalizationText" component. Then you can set the id in your vocabulary files by selecting, and you can switch to any imported language to preview the effect.
 5. By using "LocalizationImage" component, you can also set image lick text. In this case, the content in vocabulary files means the name of ths sprite than under the Resouces folder.
@@ -49,7 +49,7 @@ Will add soon.
 		}
 	}
 	```
-- "**TYPE**" is used to specify the type of text or sprite. The keyword is "Text" and "Sprite".
+- "**TYPE**" is used to specify the type of text or sprite. The keyword is "Text" and "Image", based on the enum VocabularyEntryType.
 		The type sprite will not be displayed in the selection of LocalizaitonText.
 - "**CONTENT_**" is a prefix which should followed by a language name such as en or jp or what ever you like.  
 	- The data in this column is the actual text to display in text mode, or a sprite name in sprite mode.  

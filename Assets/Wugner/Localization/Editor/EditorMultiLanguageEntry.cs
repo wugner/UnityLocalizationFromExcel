@@ -27,7 +27,7 @@ namespace Wugner.Localize
 			if (_instance != null)
 			{
 				_instance._textEntries.Clear();
-				_instance._spriteEntries.Clear();
+				_instance._imageEntries.Clear();
 			}
 			else
 			{
@@ -46,16 +46,16 @@ namespace Wugner.Localize
 		}
 
 		Dictionary<string, EditorMultiLanguageEntry> _textEntries = new Dictionary<string, EditorMultiLanguageEntry>();
-		Dictionary<string, EditorMultiLanguageEntry> _spriteEntries = new Dictionary<string, EditorMultiLanguageEntry>();
+		Dictionary<string, EditorMultiLanguageEntry> _imageEntries = new Dictionary<string, EditorMultiLanguageEntry>();
 
 		public ICollection<EditorMultiLanguageEntry> TextEntries { get { return _textEntries.Values; } }
-		public ICollection<EditorMultiLanguageEntry> SpriteEntries { get { return _spriteEntries.Values; } }
+		public ICollection<EditorMultiLanguageEntry> ImageEntries { get { return _imageEntries.Values; } }
 		public ICollection<string> TextIDs { get { return _textEntries.Keys; } }
-		public ICollection<string> SpriteIDs { get { return _spriteEntries.Keys; } }
+		public ICollection<string> ImageIDs { get { return _imageEntries.Keys; } }
 
 		public void Add(VocabularyEntry entry)
 		{
-			var entryMap = entry.Type == VocabularyEntryType.Text ? _textEntries : _spriteEntries;
+			var entryMap = entry.Type == VocabularyEntryType.Text ? _textEntries : _imageEntries;
 
 			EditorMultiLanguageEntry multiLanguageEntry;
 			if (!entryMap.TryGetValue(entry.ID, out multiLanguageEntry))
@@ -79,6 +79,11 @@ namespace Wugner.Localize
 			}
 		}
 
+		public ICollection<EditorMultiLanguageEntry> GetEntries(VocabularyEntryType type)
+		{
+			return type == VocabularyEntryType.Text ? TextEntries : ImageEntries;
+		}
+
 		public EditorMultiLanguageEntry GetTextEntry(string id)
 		{
 			if (_textEntries.ContainsKey(id))
@@ -86,10 +91,10 @@ namespace Wugner.Localize
 
 			return null;
 		}
-		public EditorMultiLanguageEntry GetSpriteEntry(string id)
+		public EditorMultiLanguageEntry GetImageEntry(string id)
 		{
-			if (_spriteEntries.ContainsKey(id))
-				return _spriteEntries[id];
+			if (_imageEntries.ContainsKey(id))
+				return _imageEntries[id];
 
 			return null;
 		}

@@ -46,7 +46,7 @@ namespace Wugner.OpenXml
 			foreach (XmlNode n in list)
 			{
 				var attrIndex = GetAttributeIndex(n, column);
-				while (column < attrIndex - 1)
+				while (column < attrIndex)
 				{
 					var cell = new ExcelCell("", row, column++);
 					this.Add(cell);

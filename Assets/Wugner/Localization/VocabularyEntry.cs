@@ -4,7 +4,7 @@ namespace Wugner.Localize
 	public enum VocabularyEntryType
 	{
 		Text,
-		Sprite
+		Image
 	}
 
 	[System.Serializable]

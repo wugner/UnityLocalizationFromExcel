@@ -15,8 +15,8 @@
   <RemovePersonalInformation/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>12645</WindowHeight>
-  <WindowWidth>22260</WindowWidth>
+  <WindowHeight>12270</WindowHeight>
+  <WindowWidth>28800</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
@@ -31,7 +31,7 @@
    <NumberFormat/>
    <Protection/>
   </Style>
-  <Style ss:ID="s16">
+  <Style ss:ID="s62">
    <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
   </Style>
  </Styles>
@@ -43,18 +43,18 @@
    <Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="158.25"/>
    <Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="158.25"/>
    <Column ss:Index="9" ss:AutoFitWidth="0" ss:Width="224.25"/>
-   <Row ss:StyleID="s16">
+   <Row ss:AutoFitHeight="0" ss:StyleID="s62">
     <Cell><Data ss:Type="String">ID</Data></Cell>
     <Cell><Data ss:Type="String">TYPE</Data></Cell>
     <Cell><Data ss:Type="String">CONTENT_en</Data></Cell>
     <Cell><Data ss:Type="String">FONT_en</Data></Cell>
-    <Cell><Data ss:Type="String">CONTENT_zh</Data></Cell>
-    <Cell><Data ss:Type="String">FONT_zh</Data></Cell>
+    <Cell><Data ss:Type="String">CONTENT_cn</Data></Cell>
+    <Cell><Data ss:Type="String">FONT_cn</Data></Cell>
     <Cell><Data ss:Type="String">CONTENT_jp</Data></Cell>
     <Cell><Data ss:Type="String">FONT_jp</Data></Cell>
     <Cell><Data ss:Type="String">REMARK</Data></Cell>
    </Row>
-   <Row>
+   <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">InventoryView/Hint_InventoryFull</Data></Cell>
     <Cell><Data ss:Type="String">Text</Data></Cell>
     <Cell><Data ss:Type="String">Inventory is full</Data></Cell>
@@ -62,7 +62,7 @@
     <Cell ss:Index="7"><Data ss:Type="String">アイテムが一杯です</Data></Cell>
     <Cell ss:Index="9"><Data ss:Type="String">Float label which will be displayed when Inventory is full</Data></Cell>
    </Row>
-   <Row>
+   <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">Common/Button_Next</Data></Cell>
     <Cell><Data ss:Type="String">Text</Data></Cell>
     <Cell><Data ss:Type="String">Next</Data></Cell>
@@ -77,6 +77,7 @@
     <Footer x:Margin="0.3"/>
     <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
    </PageSetup>
+   <Unsynced/>
    <Print>
     <ValidPrinterInfo/>
     <PaperSizeIndex>9</PaperSizeIndex>
@@ -87,18 +88,18 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>3</ActiveRow>
-     <ActiveCol>2</ActiveCol>
+     <ActiveRow>1</ActiveRow>
+     <ActiveCol>4</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>
    <ProtectScenarios>False</ProtectScenarios>
   </WorksheetOptions>
   <DataValidation xmlns="urn:schemas-microsoft-com:office:excel">
-   <Range>R2C2:R38C2</Range>
+   <Range>R4C2:R38C2,R2C2:R3C2</Range>
    <Type>List</Type>
    <CellRangeList/>
-   <Value>&quot;Text,Sprite&quot;</Value>
+   <Value>&quot;Text,Image&quot;</Value>
   </DataValidation>
  </Worksheet>
 </Workbook>

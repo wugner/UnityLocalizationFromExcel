@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 namespace Wugner.Localize
 {
-	[CustomEditor(typeof(LocalizationLabel))]
-	public class LocalizationLabelInspector : Editor
+	public abstract class BaseLocalizationUIInspector : Editor
 	{
 		public override void OnInspectorGUI()
 		{
-			var entires = EditorMultiLanguageEntryCollection.Instance.TextIDs;
+			var relatedEntryType = ((BaseLocalizationUI)target).RelatedEntryType;
+
+			//var entires = relatedEntryType == VocabularyEntryType.Text ?
+			//	EditorMultiLanguageEntryCollection.Instance.TextIDs : EditorMultiLanguageEntryCollection.Instance.ImageIDs;
 
 			var setAtRuntimeProp = serializedObject.FindProperty("_setAtRuntime");
 			EditorGUILayout.PropertyField(setAtRuntimeProp);
@@ -30,7 +32,7 @@ namespace Wugner.Localize
 				EditorGUI.LabelField(leftRect, "ID");
 				if (GUI.Button(rightRecct, idProp.stringValue, "ObjectField"))
 				{
-					LocalizationTextSelectorWindow.Show(idProp.stringValue, str =>
+					LocalizationTextSelectorWindow.Show(relatedEntryType, idProp.stringValue, str =>
 					{
 						idProp.stringValue = str;
 						serializedObject.ApplyModifiedProperties();
@@ -45,7 +47,7 @@ namespace Wugner.Localize
 				serializedObject.ApplyModifiedProperties();
 				return;
 			}
-			var ids = EditorMultiLanguageEntryCollection.Instance.TextIDs;
+			var ids = relatedEntryType == VocabularyEntryType.Text ? EditorMultiLanguageEntryCollection.Instance.TextIDs : EditorMultiLanguageEntryCollection.Instance.ImageIDs;
 			if (!ids.Contains(idProp.stringValue))
 			{
 				EditorGUILayout.HelpBox("Id is not exist! Please reselect one", MessageType.Error);
@@ -71,7 +73,8 @@ namespace Wugner.Localize
 				EditorGUI.LabelField(prefixRect, "Preview");
 
 				var previewLanguageProp = serializedObject.FindProperty("_previewLanguage");
-				var entryInMultiLanguage = EditorMultiLanguageEntryCollection.Instance.GetTextEntry(idProp.stringValue);
+				var entryInMultiLanguage = relatedEntryType == VocabularyEntryType.Text ?
+					EditorMultiLanguageEntryCollection.Instance.GetTextEntry(idProp.stringValue) : EditorMultiLanguageEntryCollection.Instance.GetImageEntry(idProp.stringValue);
 
 				var languages = entryInMultiLanguage.Languages.ToList();
 				var preIndex = languages.IndexOf(previewLanguageProp.stringValue);
@@ -91,57 +94,12 @@ namespace Wugner.Localize
 				EditorGUI.EndDisabledGroup();
 
 				previewLanguageProp.stringValue = languages[newIndex];
-				SetText(entryInMultiLanguage, languages[newIndex]);
+				UpdateUI(entryInMultiLanguage, languages[newIndex]);
 			}
 
 			serializedObject.ApplyModifiedProperties();
 		}
 
-		void SetText(EditorMultiLanguageEntry entryInMultiLanguage, string language)
-		{
-			try
-			{
-				var entry = entryInMultiLanguage.Get(language);
-				var text = ((LocalizationLabel)target).GetComponent<Text>();
-				text.text = entry.Content;
-
-				var font = string.IsNullOrEmpty(entry.FontName) ? GetDefaultFont(language) : GetFont(entry.FontName);
-				if (font != null)
-					text.font = font;
-			}
-			catch (Exception e)
-			{
-				EditorGUILayout.HelpBox(e.Message, MessageType.Error);
-			}
-		}
-
-		Font GetDefaultFont(string language)
-		{
-			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
-			var lanIndex = config.LanguageSettings.FindIndex(l => l.Language == language);
-			if (lanIndex < 0)
-				throw new Exception(string.Format("Language {0} has not been set to config", language));
-
-			var lan = config.LanguageSettings[lanIndex];
-			
-			if (lan.DefaultFont != null)
-				return lan.DefaultFont;
-
-			if (string.IsNullOrEmpty(lan.DefaultFontName))
-				throw new Exception(string.Format("Font is not set for language {0}", language));
-
-			return GetFont(lan.DefaultFontName);
-		}
-
-		Font GetFont(string fontName)
-		{
-			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
-			
-			var font = config.AllFonts.Find(f => f.name == fontName);
-			if (font == null)
-				throw new Exception(string.Format("Can not find font named {0} in font settings", fontName));
-
-			return font;
-		}
+		protected abstract void UpdateUI(EditorMultiLanguageEntry entryInMultiLanguage, string language);
 	}
 }

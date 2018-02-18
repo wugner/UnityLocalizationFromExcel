@@ -60,7 +60,17 @@ namespace Wugner.Localize
 					if (temp.StartsWith("Assets"))
 						temp = temp.Substring(6);
 
-					filePaths.Add(Application.dataPath + "/" + temp);
+					var actualPath = Application.dataPath + "/" + temp;
+
+					if (File.Exists(actualPath))
+					{
+						filePaths.Add(actualPath);
+					}
+					else if (Directory.Exists(actualPath))
+					{
+						var allFiles = Directory.GetFiles(actualPath, "", SearchOption.AllDirectories);
+						filePaths.AddRange(allFiles);
+					}
 				}
 			}
 			return filePaths;

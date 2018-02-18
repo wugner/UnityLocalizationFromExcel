@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using System;
 using System.Linq;
-using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace Wugner.Localize
 {
 	public class LocalizationTextSelectorWindow : EditorWindow
 	{
 		static LocalizationTextSelectorWindow _window;
-		public static void Show(string current, System.Action<string> onSelect)
+		public static void Show(VocabularyEntryType entryType, string current, Action<string> onSelect)
 		{
 			if (_window == null)
 				_window = CreateInstance<LocalizationTextSelectorWindow>();
+			_window._entryType = entryType;
 			_window._current = current;
 			_window._onSelect = onSelect;
 			_window.ShowAuxWindow();
 		}
 
+		VocabularyEntryType _entryType;
 		string _filter;
 		string _current;
 		Action<string> _onSelect;
@@ -29,7 +30,7 @@ namespace Wugner.Localize
 
 			using (new EditorGUILayout.ScrollViewScope(Vector2.zero, false, false))
 			{
-				var entries = EditorMultiLanguageEntryCollection.Instance.TextEntries
+				var entries = EditorMultiLanguageEntryCollection.Instance.GetEntries(_entryType)
 					.Where(e => string.IsNullOrEmpty(_filter) || e.ID.Contains(_filter) || e.Remark.Contains(_filter))
 					.ToList();
 				{
