@@ -67,37 +67,37 @@ Below are the main features.
 Find the config asset by clicking the menu "Localization/Config" or manually locate it in
      
      /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
-- Language Settings
+- **Language Settings**
 Set the language infomation for your imported languages in the array. Such as default font.  
 If you don't set the language correctly, the "**LocalizationText**" component will display an error like "Language has not been set to the config".
-  - Name.The name should be the same as the column in your language files.
-  - Display Name. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
-  - Default font. Set the default font to the this language.
-  - Defalut font name. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
+  - *Name*.The name should be the same as the column in your language files.
+  - *Display Name*. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
+  - *Default font*. Set the default font to the this language.
+  - *Defalut font name*. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
 ``` C#
 	UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
 ```
-- Localize Excel Files  
+- **Localize Excel Files**  
 Drag your language files in your project to this field.  
-- Localize Excel Files Path
+- **Localize Excel Files Path**  
 If your language files are not in the unity project, you can set the relative path in this filed. The path can also be a directory name so the importer will import all files under the folder and its sub folders.
-- All Fonts
+- **All Fonts**  
 Set other fonts that will be used in the project.  
 If you set the font name in your language files, you should import these fonts to unity project and drag them to this field, or make sure they can be imported at runtime by calling
 ``` C#
 	UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
 ```
-- Id Constant Name Space  
+- **Id Constant Name Space**  
 System will generate a constant class filled by the ids in the language files so it will be helpful for coding when you want change a text at runtime.  
 This is the name space for this constant class file. If you leave it empty, the default name space will be **Wuger.Localize**.
-- Id Constant Class Name
+- **Id Constant Class Name**  
 Similar to the name space, this will be the class name for the constant class. The default class name will be **IDS** if you leave it empty.
-- Custom Sprite Manager
+- **Custom Sprite Manager**  
 If you want use your own sprite manager, set this field to the class name of your custom sprite manager.
-- Custom Font Manager
+- **Custom Font Manager**  
 If you want use your own font manager, set this field to the class name of your custom font manager.
-- Custom Vocabulary Manager
+- **Custom Vocabulary Manager**  
 The class name of your custom vocabulary manager.
-- Custom Editor Vocabulary Importer
+- **Custom Editor Vocabulary Importer**  
 The class name of your custom editor vocabulary importer.
 
