@@ -18,22 +18,18 @@ Below are the main features.
 	> /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
 	
 	You can add the files by drag them into "Localiza Excel Files" field if they are in your unity project, or add relative path to "**Localize Excel File Paths**" field.  
-	When you use the relative path, you can specify the file full path, or a directory which meams all files under this directory include sub directories will be imported.
+	When you use the relative path, you can set the file's path with file name, or a directory which means all files under this directory include sub directories will be imported.
 	
 3. Click the menu "Localization/Reimport Excel Files" to import the files. The vocabulary assets will be generated in 
 	> "/Assets/Wugner/Localization/Generated/Resources/"  
 	
 	folder, also the constant C# source file will be generated in 
-	> "/Assets/Wugner/Localization/Generated/" folder
+	> "/Assets/Wugner/Localization/Generated/"
 	
-4. Create a ui Text component under Canvas, add the "LocalizationText" component. Then you can set the id in your vocabulary files by selecting, and you can switch to any imported language to preview the effect.
-5. By using "LocalizationImage" component, you can also set image lick text. In this case, the content in vocabulary files means the name of ths sprite than under the Resouces folder.
+4. Create a ui Text component under Canvas, add the "LocalizationText" component. Then you can set the id which is configed in your vocabulary files by selecting in a dialog, and you can switch to any imported language to preview the effect.
+5. By using "LocalizationImage" component, you can also set image like the text. In this case, the content in vocabulary files means the name of ths sprite than under the Resouces folder.
 
 ***
-
-### The configuration asset
-Will add soon.
-
 ### The fomart of vocabulary files
 - xlsx,csv,xml are supported. It is recommended to use xml format since it is text file which can be versioned by git or other version control tools, and it can also storage many style infos by editing in Excel. You can create this xml format by using Excel's "save as" menu.
 - The first row is header row, which is important. The names of head are almost fixed except the content and font should followed by language names. The column's order can be changed.
@@ -64,4 +60,44 @@ Will add soon.
 	- The remark column is an optional column, since one id can appear in defferent sheets or files but the remark should be one. If multiple remarks are set for one id, one of them will be accepted but which one is depend on the order of reading files.
 	- It is no use for rumtime.
 - Any other column with a header besides above introduced will be ignored.
+
+
+
+### The configuration asset  
+Find the config asset by clicking the menu "Localization/Config" or manually locate it in  
+	
+	> /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
+- Language Settings
+Set the language infomation for your imported languages in the array. Such as default font.  
+If you don't set the language correctly, the "**LocalizationText**" component will display an error like "Language has not been set to the config".
+-- Name.The name should be the same as the column in your language files.
+-- Display Name. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
+-- Default font. Set the default font to the this language.
+-- Defalut font name. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
+``` C#
+	> UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
+```
+- Localize Excel Files  
+Drag your language files in your project to this field.  
+- Localize Excel Files Path
+If your language files are not in the unity project, you can set the relative path in this filed. The path can also be a directory name so the importer will import all files under the folder and its sub folders.
+- All Fonts
+Set other fonts that will be used in the project.  
+If you set the font name in your language files, you should import these fonts to unity project and drag them to this field, or make sure they can be imported at runtime by calling
+``` C#
+	> UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
+```
+- Id Constant Name Space  
+System will generate a constant class filled by the ids in the language files so it will be helpful for coding when you want change a text at runtime.  
+This is the name space for this constant class file. If you leave it empty, the default name space will be **Wuger.Localize**.
+- Id Constant Class Name
+Similar to the name space, this will be the class name for the constant class. The default class name will be **IDS** if you leave it empty.
+- Custom Sprite Manager
+If you want use your own sprite manager, set this field to the class name of your custom sprite manager.
+- Custom Font Manager
+If you want use your own font manager, set this field to the class name of your custom font manager.
+- Custom Vocabulary Manager
+The class name of your custom vocabulary manager.
+- Custom Editor Vocabulary Importer
+The class name of your custom editor vocabulary importer.
 
