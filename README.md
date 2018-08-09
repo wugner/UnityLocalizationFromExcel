@@ -64,18 +64,18 @@ Below are the main features.
 
 
 ### The configuration asset  
-Find the config asset by clicking the menu "Localization/Config" or manually locate it in  
-	
-	> /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
+Find the config asset by clicking the menu "Localization/Config" or manually locate it in
+     
+     /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
 - Language Settings
 Set the language infomation for your imported languages in the array. Such as default font.  
 If you don't set the language correctly, the "**LocalizationText**" component will display an error like "Language has not been set to the config".
--- Name.The name should be the same as the column in your language files.
--- Display Name. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
--- Default font. Set the default font to the this language.
--- Defalut font name. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
+  - Name.The name should be the same as the column in your language files.
+  - Display Name. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
+  - Default font. Set the default font to the this language.
+  - Defalut font name. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
 ``` C#
-	> UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
+	UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
 ```
 - Localize Excel Files  
 Drag your language files in your project to this field.  
@@ -85,7 +85,7 @@ If your language files are not in the unity project, you can set the relative pa
 Set other fonts that will be used in the project.  
 If you set the font name in your language files, you should import these fonts to unity project and drag them to this field, or make sure they can be imported at runtime by calling
 ``` C#
-	> UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
+	UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
 ```
 - Id Constant Name Space  
 System will generate a constant class filled by the ids in the language files so it will be helpful for coding when you want change a text at runtime.  
