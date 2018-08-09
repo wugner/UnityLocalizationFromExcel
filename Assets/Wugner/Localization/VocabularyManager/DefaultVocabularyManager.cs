@@ -9,7 +9,7 @@ namespace Wugner.Localize
 	{
 		Dictionary<string, Dictionary<string, RuntimeVocabularyEntry>> _languageToEntryMap = new Dictionary<string, Dictionary<string, RuntimeVocabularyEntry>>();
 
-		public void Init()
+		public virtual void Init()
 		{
 			var entries = Resources.Load<VocabulariesAsset>("LocalizationVocabularies");
 
@@ -35,7 +35,7 @@ namespace Wugner.Localize
 				Resources.UnloadAsset(entries);
 			}
 		}
-		public Dictionary<string, RuntimeVocabularyEntry> GetByLanguage(string language)
+		public virtual Dictionary<string, RuntimeVocabularyEntry> GetByLanguage(string language)
 		{
 			Dictionary<string, RuntimeVocabularyEntry> v;
 			if (!_languageToEntryMap.TryGetValue(language, out v))
