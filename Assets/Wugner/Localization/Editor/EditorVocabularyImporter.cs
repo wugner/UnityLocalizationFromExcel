@@ -94,11 +94,28 @@ namespace Wugner.Localize
 			foreach (var vocabularyMap in vocabularyMapList)
 			{
 				var vocabularyAsset = EditorUtility.LoadOrCreateAsset<VocabulariesAsset>(string.Format(Localization.ASSETPATH_VOCABULARY, vocabularyMap.Language));
-				vocabularyAsset.VocabularyEntries.Clear();
-				vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap);
-			}
+                UnityEditor.EditorUtility.SetDirty(vocabularyAsset);
 
-			AssetDatabase.SaveAssets();
+                vocabularyAsset.VocabularyEntries.Clear();
+				vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap);
+            }
+            var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
+            foreach (var map in vocabularyMapList)
+            {
+                var index = config.LanguageSettings.FindIndex(s => s.Language == map.Language);
+                if (index < 0)
+                {
+                    config.LanguageSettings.Add(new LocalizationConfig.LanguageInfo()
+                    {
+                        Language = map.Language,
+                        DefaultFont = Resources.Load("Library/unity default resources/Arial") as Font
+                    });
+                }
+            }
+            config.LanguageSettings.RemoveAll(s => vocabularyMapList.All(m => m.Language != s.Language));
+
+            UnityEditor.EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
 		}
 
 		protected virtual void GenerateIdConstantSourceFile(List<VocabularyEntryMap> vocabularyMapList)

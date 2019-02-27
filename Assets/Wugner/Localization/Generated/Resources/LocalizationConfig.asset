@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -13,15 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _languageSettings:
   - Language: en
-    DisplayName: English
+    DisplayName: 
     DefaultFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     DefaultFontName: 
   - Language: cn
-    DisplayName: "\u4E2D\u6587"
+    DisplayName: 
     DefaultFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     DefaultFontName: 
   - Language: jp
-    DisplayName: "\u65E5\u672C\u8A9E"
+    DisplayName: 
     DefaultFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     DefaultFontName: 
   _localizeExcelFiles:

@@ -31,8 +31,9 @@ namespace Wugner.Localize
 				_staticInstance.Init();
 			}
 		}
-		
-		ILocalizationSpriteManager _spriteManager;
+        List<LocalizationConfig.LanguageInfo> _languageSettings;
+
+        ILocalizationSpriteManager _spriteManager;
 		public ILocalizationSpriteManager SpriteManager { get { return _spriteManager; } }
 		ILocalizationFontManager _fontManager;
 		public ILocalizationFontManager FontManager { get { return _fontManager; } }
@@ -51,6 +52,7 @@ namespace Wugner.Localize
 			DontDestroyOnLoad(gameObject);
 
 			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
+            _languageSettings = config.LanguageSettings;
 			InitSpritesManager(config.CustomSpriteManager);
 			InitFontManager(config.CustomFontManager);
 			InitVocabularyManager(config.CustomVocabularyManager);
@@ -163,14 +165,25 @@ namespace Wugner.Localize
 				_onSwitchLanguage();
 		}
 
-		public static RuntimeVocabularyEntry GetEntry(string id)
+        RuntimeVocabularyEntry GetEntryImp(string id)
+        {
+            if (_currentVacabularies == null)
+            {
+                if (_languageSettings == null || _languageSettings.Count == 0)
+                    throw new Exception("Language settings are empty!");
+                SwitchLanguage(_languageSettings[0].Language);
+            }
+
+            RuntimeVocabularyEntry ret;
+            if (Instance._currentVacabularies.TryGetValue(id, out ret))
+            {
+                return ret;
+            }
+            throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id, Instance._currentLanguage));
+        }
+        public static RuntimeVocabularyEntry GetEntry(string id)
 		{
-			RuntimeVocabularyEntry ret;
-			if (Instance._currentVacabularies.TryGetValue(id, out ret))
-			{
-				return ret;
-			}
-			throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id, Instance._currentLanguage));
+            return Instance.GetEntryImp(id);
 		}
 		
 		public static Font GetFont(string fontName)

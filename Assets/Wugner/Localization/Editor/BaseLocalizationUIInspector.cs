@@ -11,6 +11,12 @@ namespace Wugner.Localize
 	{
 		public override void OnInspectorGUI()
 		{
+            if (Application.isPlaying)
+            {
+                DrawDefaultInspector();
+                return;
+            }
+
 			var relatedEntryType = ((BaseLocalizationUI)target).RelatedEntryType;
 
 			//var entires = relatedEntryType == VocabularyEntryType.Text ?
