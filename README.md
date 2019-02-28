@@ -6,7 +6,7 @@ Below are the main features.
 - Helpful selection and preview in ui editing based on ugui.
 - A constant C# source file will be generated to help coding when you want to control the text at runtime in your script.
 - "Image Text" support. Similar to text, image can also be switched when switching to another language.
-- Customizable editor vocabulary importer, rumtime vocablary, manager runtime sprite manager, and runtime font manager.
+- Customizable editor vocabulary importer, rumtime vocablary manager, runtime sprite manager, and runtime font manager.
 
 ## Quick Start
 1. First of all, create vocabulary files. You can find the sample format files in 
@@ -26,11 +26,11 @@ Below are the main features.
 	folder, also the constant C# source file will be generated in 
 	> "/Assets/Wugner/Localization/Generated/"
 	
-4. Create a ui Text component under Canvas, add the "LocalizationText" component. Then you can set the id which is configed in your vocabulary files by selecting in a dialog, and you can switch to any imported language to preview the effect.
+4. Create an ui Text component under Canvas, and add the "LocalizationText" component to the game object. Then you can set the id which is configured in your vocabulary files by selecting in a dialog, and you can switch to any imported language to preview the effect.
 5. By using "LocalizationImage" component, you can also set image like the text. In this case, the content in vocabulary files means the name of ths sprite than under the Resouces folder.
 
 ***
-### The fomart of vocabulary files
+### The format of vocabulary files
 - xlsx,csv,xml are supported. It is recommended to use xml format since it is text file which can be versioned by git or other version control tools, and it can also storage many style infos by editing in Excel. You can create this xml format by using Excel's "save as" menu.
 - The first row is header row, which is important. The names of head are almost fixed except the content and font should followed by language names. The column's order can be changed.
 - "ID" is the identity of a vocabulary. You can use '/' to group them when output to the constant C# source file.
@@ -50,15 +50,15 @@ Below are the main features.
 - "**CONTENT_**" is a prefix which should followed by a language name such as en or jp or what ever you like.  
 	- The data in this column is the actual text to display in text mode, or a sprite name in sprite mode.  
 	- You can set more than one content for multiple languages in one sheet, like the samples files in the project. Be sure these language names are the same if you seperate your data in multiple sheets or files.  
-	- You won't have to add all languages in one single row. An id can appear more than once as long as the different rows have no same language column. Usually, you create vocabulary files in two or three languages which you main supported in the begining or middle phase of your development, and you would like to set those contents in one row since you can simply compare them. And in the late phase of your development, you may want to add some more language without updating those files created in early phases. This feature is made for this case.
+	- You won't have to add all languages in one single row. An id can appear more than once as long as the different rows have no same language column. Usually, you create vocabulary files in two or three languages which are your mainly supported languages in the begining or middle phase of your development, and you would like to set those contents in the same file and same row since you can simply compare them. And in the late phase of your development, you may want to add some more language without updating those files created in early phases. This feature is designed for this case.
 - "**FONT_**" is also followed by the language name just like "CONTENT_".  
 	- "FONT_" is a nullable parameter to specify a font which is different from the language's default font for this id. If this vocabulary in this language use the default font, set it empty.   
-	- "FONT_" should appear with "CONTENT_" in pair.  
+	- "FONT_" should appears with "CONTENT_" in pair.  
 	- The language's default font can be set in LocalizationConfig.asset.
 - "**REMARK**" is the comment of this id.
-	- It will displayed in id selection window, and appear as a comment in the constant C# source file for every field.
-	- The remark column is an optional column, since one id can appear in defferent sheets or files but the remark should be one. If multiple remarks are set for one id, one of them will be accepted but which one is depend on the order of reading files.
-	- It is no use for rumtime.
+	- It will be displayed in id selection window, and appears as a comment in the constant C# source file for every field.
+	- The remark column is an optional column, since one id can appear in defferent sheets or files but the remark should be one. If multiple remarks are set for one id, one of them will be accepted but which one will be accepted is depend on the order of reading files.
+	- It is no use for runtime.
 - Any other column with a header besides above introduced will be ignored.
 
 
@@ -68,10 +68,10 @@ Find the config asset by clicking the menu "Localization/Config" or manually loc
      
      /Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset
 - **Language Settings**
-Set the language infomation for your imported languages in the array. Such as default font.  
+Set the language infomation for your imported languages in the array. Such as default font.  Language will be added to the list automatically after importing vocabulary files, however the fields will remain empty except the *Name*.
 If you don't set the language correctly, the "**LocalizationText**" component will display an error like "Language has not been set to the config".
   - *Name*.The name should be the same as the column in your language files.
-  - *Display Name*. This is not used in the system. However, you can use it in your own code, such as display the name for language selecting in option menu after player started your game.
+  - *Display Name*. This is not used in the system. However, you can use it in your own code, such as displaying the name for language selecting in option menu after player started your game.
   - *Default font*. Set the default font to the this language.
   - *Defalut font name*. If your font is not imported in the unity project, you can set the font name that will try to import the font by this name at runtime by calling this function
 ``` C#
@@ -83,7 +83,7 @@ Drag your language files in your project to this field.
 If your language files are not in the unity project, you can set the relative path in this filed. The path can also be a directory name so the importer will import all files under the folder and its sub folders.
 - **All Fonts**  
 Set other fonts that will be used in the project.  
-If you set the font name in your language files, you should import these fonts to unity project and drag them to this field, or make sure they can be imported at runtime by calling
+If you set the font name in your language files, you should import hhose fonts to unity project and drag them to this field, or make sure they can be imported at runtime by calling
 ``` C#
 	UnityEngine.Font.CreateDynamicFontFromOSFont(string fontname, int size)
 ```
