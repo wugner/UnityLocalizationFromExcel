@@ -179,7 +179,7 @@ namespace Wugner.Localize
             {
                 return ret;
             }
-            throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id, Instance._currentLanguage));
+            throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id.Trim('/'), Instance._currentLanguage));
         }
         public static RuntimeVocabularyEntry GetEntry(string id)
 		{
