@@ -56,7 +56,7 @@ namespace Wugner.Localize
 			{
 				foreach (var p in config.LocalizeExcelFilePaths)
 				{
-					var temp = p.TrimStart('/');
+					var temp = p.Trim('/');
 					if (temp.StartsWith("Assets"))
 						temp = temp.Substring(6);
 
