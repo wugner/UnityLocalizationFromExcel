@@ -9,6 +9,7 @@ namespace Wugner.Localize
 	public interface IEditorVocabularyImporter
 	{
 		void ImportFiles();
+        List<VocabularyEntry> GetImportedVocabularyEntries();
 	}
 
 	public class DefaultEditorVocabularyImporter : IEditorVocabularyImporter
@@ -56,7 +57,7 @@ namespace Wugner.Localize
 			{
 				foreach (var p in config.LocalizeExcelFilePaths)
 				{
-					var temp = p.TrimStart('/');
+					var temp = p.Trim('/');
 					if (temp.StartsWith("Assets"))
 						temp = temp.Substring(6);
 
@@ -123,5 +124,16 @@ namespace Wugner.Localize
 			var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Localization.ASSETPATH_CONFIG);
 			EditorConstantFileGenerater.CreateSourceFile(vocabularyMapList[0], config.IdConstantNameSpace, config.IdConstantClassName);
 		}
-	}
+
+        public List<VocabularyEntry> GetImportedVocabularyEntries()
+        {
+            List<VocabularyEntry> ret = new List<VocabularyEntry>();
+            var assets = Resources.LoadAll<VocabulariesAsset>("");
+            foreach (var a in assets)
+            {
+                ret.AddRange(a.VocabularyEntries);
+            }
+            return ret;
+        }
+    }
 }

@@ -16,7 +16,7 @@ namespace Wugner.Localize
 				if (_instance == null)
 				{
 					_instance = new EditorMultiLanguageEntryCollection();
-					_instance.LoadEntriesFromAsset();
+					_instance.LoadEntries();
 				}
 				return _instance;
 			}
@@ -33,16 +33,13 @@ namespace Wugner.Localize
 			{
 				_instance = new EditorMultiLanguageEntryCollection();
 			}
-			_instance.LoadEntriesFromAsset();
+			_instance.LoadEntries();
 		}
 
-		void LoadEntriesFromAsset()
+		void LoadEntries()
 		{
-			var assets = Resources.LoadAll<VocabulariesAsset>("");
-			foreach (var a in assets)
-			{
-				_instance.AddRange(a.VocabularyEntries);
-			}
+            var importer = EditorLocalizationInitializer.CreateEditorVocabularyImporter();
+		    _instance.AddRange(importer.GetImportedVocabularyEntries());
 		}
 
 		Dictionary<string, EditorMultiLanguageEntry> _textEntries = new Dictionary<string, EditorMultiLanguageEntry>();
@@ -140,7 +137,7 @@ namespace Wugner.Localize
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			throw new System.NotImplementedException();
-		}
+            return _languageToEntry.Values.GetEnumerator();
+        }
 	}
 }

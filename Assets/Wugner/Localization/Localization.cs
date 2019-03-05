@@ -175,7 +175,7 @@ namespace Wugner.Localize
             }
 
             RuntimeVocabularyEntry ret;
-            if (Instance._currentVacabularies.TryGetValue(id, out ret))
+            if (Instance._currentVacabularies.TryGetValue(id.Trim('/'), out ret))
             {
                 return ret;
             }
@@ -211,5 +211,6 @@ namespace Wugner.Localize
 				_staticInstance._onSwitchLanguage -= onSwitchLanguage;
 			}
 		}
+
 	}
 }
