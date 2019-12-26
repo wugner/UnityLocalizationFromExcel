@@ -38,8 +38,11 @@ namespace Wugner.Localize
 
 		void LoadEntries()
 		{
-            var importer = EditorLocalizationInitializer.CreateEditorVocabularyImporter();
-		    _instance.AddRange(importer.GetImportedVocabularyEntries());
+			var allAssets = Resources.LoadAll<VocabulariesAsset>("");
+			foreach (var a in allAssets)
+			{
+				_instance.AddRange(a.VocabularyEntries);
+			}
 		}
 
 		Dictionary<string, EditorMultiLanguageEntry> _textEntries = new Dictionary<string, EditorMultiLanguageEntry>();

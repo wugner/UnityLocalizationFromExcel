@@ -4,15 +4,20 @@ using System.Collections.Generic;
 namespace Wugner.Localize
 {
 	[System.Serializable]
-	public class VocabularyEntryMap : IEnumerable<VocabularyEntry>
+	public class VocabularyEntryCollection : IEnumerable<VocabularyEntry>
 	{
 		string _language;
-		public string Language { get { return _language; } set { _language = value; } }
+		public string Language { get { return _language; } }
 
 		Dictionary<string, VocabularyEntry> _dataCollection = new Dictionary<string, VocabularyEntry>();
 		
 		public ICollection<string> IDs { get { return _dataCollection.Keys; } }
 		public int Count { get { return _dataCollection.Count; } }
+
+		public VocabularyEntryCollection(string language)
+		{
+			_language = language;
+		}
 
 		public void Add(VocabularyEntry entry)
 		{
@@ -33,6 +38,10 @@ namespace Wugner.Localize
 			}
 
 			throw new System.Exception(string.Format("Can not get vocabulary {0} in language {1}", id, Language));
+		}
+		public bool TryGetValue(string id, out VocabularyEntry entry)
+		{
+			return _dataCollection.TryGetValue(id, out entry);
 		}
 
 		public IEnumerator<VocabularyEntry> GetEnumerator()

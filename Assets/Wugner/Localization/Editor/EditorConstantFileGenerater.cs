@@ -9,19 +9,19 @@ namespace Wugner.Localize
 {
 	public class EditorConstantFileGenerater
 	{
-		public static void CreateSourceFile(VocabularyEntryMap data, string @namespace, string baseClassName)
+		public static void CreateSourceFile(VocabularyEntryCollection data, string @namespace, string baseClassName)
 		{
 			var list = data.Select(t => new IDWithComment(t.ID, t.Remark)).ToList();
 			var str = GenerateFileContent(list, @namespace, baseClassName);
 
-			var fileFullPath = Application.dataPath + Localization.CONSTANT_ID_FILE.Substring(6);
+			var fileFullPath = Application.dataPath + Constant.CONSTANT_ID_FILE.Substring(6);
 			var directory = Directory.GetParent(fileFullPath);
 			if (!Directory.Exists(directory.FullName))
 				Directory.CreateDirectory(directory.FullName);
 
 			File.WriteAllText(fileFullPath, str);
 
-			Debug.Log("Generated id constant file. " + Localization.CONSTANT_ID_FILE);
+			Debug.Log("Generated id constant file. " + Constant.CONSTANT_ID_FILE);
 
 			AssetDatabase.Refresh();
 		}

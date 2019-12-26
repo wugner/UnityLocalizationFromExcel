@@ -5,7 +5,7 @@ using System.IO;
 using ExcelDataReader;
 using System.Linq;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Importer
 {
 	public class LocalizationXmlReader
 	{
@@ -15,9 +15,9 @@ namespace Wugner.Localize
 		const string HEADER_CONTENT = "CONTENT_";
 		const string HEADER_FONT = "FONT_";
 
-		Dictionary<string, VocabularyEntryMap> _multiLanguageData = new Dictionary<string, VocabularyEntryMap>();
+		Dictionary<string, VocabularyEntryCollection> _multiLanguageData = new Dictionary<string, VocabularyEntryCollection>();
 
-		public List<VocabularyEntryMap> LoadFiles(IEnumerable<string> filePaths)
+		public List<VocabularyEntryCollection> LoadFiles(IEnumerable<string> filePaths)
 		{
 			foreach (var filePath in filePaths)
 			{
@@ -50,7 +50,7 @@ namespace Wugner.Localize
 			return _multiLanguageData.Values.ToList();
 		}
 
-		public Dictionary<string, VocabularyEntryMap> LoadXmlFiles(IEnumerable<string> xmlTexts)
+		public Dictionary<string, VocabularyEntryCollection> LoadXmlFiles(IEnumerable<string> xmlTexts)
 		{
 			foreach (var xml in xmlTexts)
 			{
@@ -142,10 +142,10 @@ namespace Wugner.Localize
 						var content = kv.Value;
 						var font = mapping[HEADER_FONT + language];
 
-						VocabularyEntryMap entryMap;
+						VocabularyEntryCollection entryMap;
 						if (!_multiLanguageData.TryGetValue(language, out entryMap))
 						{
-							entryMap = new VocabularyEntryMap() { Language = language };
+							entryMap = new VocabularyEntryCollection(language);
 							_multiLanguageData.Add(language, entryMap);
 						}
 

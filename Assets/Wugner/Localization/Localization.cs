@@ -7,11 +7,6 @@ namespace Wugner.Localize
 {
 	public class Localization : MonoBehaviour
 	{
-		public const string RESOURCES_FOLDER = "Wugner/Localization/Generated/Resources";
-		public const string CONSTANT_ID_FILE = "Assets/Wugner/Localization/Generated/LocalizationID.cs";
-		public const string ASSETPATH_CONFIG = "Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset";
-		public const string ASSETPATH_VOCABULARY = "Assets/Wugner/Localization/Generated/Resources/Vocabularies_{0}.asset";
-
 		static Localization _staticInstance;
 		public static Localization Instance
 		{
