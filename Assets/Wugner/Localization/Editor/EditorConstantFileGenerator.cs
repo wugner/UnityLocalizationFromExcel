@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public class EditorConstantFileGenerater
+	public class EditorConstantFileGenerator
 	{
 		public static void CreateSourceFile(VocabularyEntryCollection data, string @namespace, string baseClassName)
 		{

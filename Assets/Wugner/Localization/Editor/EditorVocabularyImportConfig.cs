@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
@@ -10,16 +10,15 @@ namespace Wugner.Localize
 {
 	public interface IEditorVocabularyImportConfig
 	{
-		List<(Type, IEnumerable<string>)> GetConfigData();
+		List<(Type type, IEnumerable<string> filePaths)> GetImportersInfo();
 	}
 
-	[CreateAssetMenu]
 	public class EditorVocabularyImportConfig : ScriptableObject, IEditorVocabularyImportConfig
 	{
 		[SerializeField]
-		List<string> _openXmlfilePaths;
+		List<string> _openXmlfilePaths = null;
 
-		public List<(Type, IEnumerable<string>)> GetConfigData()
+		public List<(Type type, IEnumerable<string> filePaths)> GetImportersInfo()
 		{
 			return new List<(Type, IEnumerable<string>)> { 
 				(typeof(Importer.OpenXmlVocabularyImporter), GetFilePaths(_openXmlfilePaths)) 

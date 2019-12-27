@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System;
 using System.Linq;
@@ -15,34 +15,46 @@ namespace Wugner.Localize
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
 				return;
 
-			EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            EditorUtility.LoadOrCreateAsset<EditorVocabularyImportConfig>(Constant.ASSETPATH_IMPORTER_CONFIG);
-            EditorMultiLanguageEntryCollection.Reload();
+			EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+            EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig));
+            EditorVocabularyEntriesManager.Reload();
 		}
 
 		[MenuItem("Localization/Open Config")]
 		static void OpenConfig()
 		{
-			var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+			var config = EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
 			Selection.activeObject = config;
         }
 
         [MenuItem("Localization/ReloadImportFiles")]
-		static void ReimportVocabularyFiles()
+        static void ReimportVocabularyFiles()
 		{
             var merger = new Importer.VocabularyMerger();
 
-            var importerConfig = EditorUtility.LoadOrCreateAsset<EditorVocabularyImportConfig>(Constant.ASSETPATH_IMPORTER_CONFIG);
-            foreach(var (type, filePaths) in importerConfig.GetConfigData())
+            if (!(EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig))
+                is IEditorVocabularyImportConfig importerConfig))
             {
-                var importer = Activator.CreateInstance(type) as ILocalizationVocabularyImporter;
+                throw new Exception($"Asset {Constant.ASSETPATH_IMPORTER_CONFIG} does not implement IEditorVocabularyImportConfig!");
+            }
+
+            foreach (var (type, filePaths) in importerConfig.GetImportersInfo())
+            {
+                var importer = Activator.CreateInstance(type);
                 foreach(var p in filePaths)
                 {
-                    var text = File.ReadAllText(p);
-                    var task = importer.Import(text);
-                    task.Wait();
-
-                    merger.Add(task.Result, Debug.LogWarning);
+                    if (importer is ITextVocabularyImporter textImporter)
+                    {
+                        var text = File.ReadAllText(p);
+                        var entries = textImporter.Import(text);
+                        merger.Add(entries, Debug.LogWarning);
+                    }
+                    else if (importer is IBinaryVocabularyImporter binaryImporter)
+                    {
+                        var bytes = File.ReadAllBytes(p);
+                        var entries = binaryImporter.Import(bytes);
+                        merger.Add(entries, Debug.LogWarning);
+                    }
                 }
             }
 
@@ -55,51 +67,22 @@ namespace Wugner.Localize
 
             GenerateVocabularyAssets(entriesSeperatedByLanguage.Values);
 
-            //It is important to do this after reloading, so ui components can display updated info, such as id selection or a preview.
-            EditorMultiLanguageEntryCollection.Reload();
-
             GenerateIdConstantSourceFile(entriesSeperatedByLanguage.First().Value);
+
+            //It is important to do this after reloading, so ui components can display updated info, such as id selection or a preview.
+            EditorVocabularyEntriesManager.Reload();
         }
 
-        static void GenerateVocabularyAssets(IEnumerable<VocabularyEntryCollection> vocabularyMapList)
+        static void GenerateVocabularyAssets(IEnumerable<VocabularyEntryCollection> languageSepratedvocabularyEntryList)
         {
-            //Generate assets that seperated by languages.
-            //These assets are not only loaded at runtime to display text, but also used in editor mode to provide id selection and preview function.
-            //By writing your own vocabulary manager, it is possible to load only one language vocabulary when game starting or switching to another language,
-            //instead of loading all languages vocabulary.
-            //Also you can output them to the streaming assets folder in json files and load them at runtime so you can add extra languages with out rebuilding the game.
-            foreach (var vocabularyMap in vocabularyMapList)
-            {
-                var vocabularyAsset = EditorUtility.LoadOrCreateAsset<VocabulariesAsset>(
-                    string.Format(Constant.ASSETPATH_VOCABULARY, vocabularyMap.Language));
-                UnityEditor.EditorUtility.SetDirty(vocabularyAsset);
-
-                vocabularyAsset.VocabularyEntries.Clear();
-                vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap);
-            }
-            //var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            //foreach (var map in vocabularyMapList)
-            //{
-            //    var index = config.LanguageSettings.FindIndex(s => s.Language == map.Language);
-            //    if (index < 0)
-            //    {
-            //        config.LanguageSettings.Add(new LocalizationConfig.LanguageInfo()
-            //        {
-            //            Language = map.Language,
-            //            DefaultFont = Resources.Load("Library/unity default resources/Arial") as Font
-            //        });
-            //    }
-            //}
-            //config.LanguageSettings.RemoveAll(s => vocabularyMapList.All(m => m.Language != s.Language));
-
-            //UnityEditor.EditorUtility.SetDirty(config);
-            AssetDatabase.SaveAssets();
+            var assetGenerator = new EditorVocabularyAssetGenerator();
+            assetGenerator.GenerateVocabularyAssets(languageSepratedvocabularyEntryList);
         }
 
         static void GenerateIdConstantSourceFile(VocabularyEntryCollection vocabularyCollection)
         {
-            var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            EditorConstantFileGenerater.CreateSourceFile(vocabularyCollection, config.IdConstantNameSpace, config.IdConstantClassName);
+            var config = EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+            EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, config.IdConstantNameSpace, config.IdConstantClassName);
         }
     }
 }

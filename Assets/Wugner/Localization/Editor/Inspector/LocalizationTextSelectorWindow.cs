@@ -30,7 +30,7 @@ namespace Wugner.Localize
 
 			using (new EditorGUILayout.ScrollViewScope(Vector2.zero, false, false))
 			{
-				var entries = EditorMultiLanguageEntryCollection.Instance.GetEntries(_entryType)
+				var entries = EditorVocabularyEntriesManager.Instance.GetEntries(_entryType)
 					.Where(e => string.IsNullOrEmpty(_filter) || e.ID.Contains(_filter) || e.Remark.Contains(_filter))
 					.ToList();
 				{

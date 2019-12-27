@@ -32,28 +32,23 @@ namespace Wugner.Localize
 		public List<Font> AllFonts { get { return _allFonts; } }
 
 		[SerializeField]
-		string _idConstantNameSpace;
+		string _idConstantNameSpace = null;
 		public string IdConstantNameSpace { get { return _idConstantNameSpace; } }
 
 		[SerializeField]
-		string _idConstantClassName;
+		string _idConstantClassName = null;
 		public string IdConstantClassName { get { return _idConstantClassName; } }
 
 		[SerializeField]
-		string _customSpriteManager;
+		string _customSpriteManager = null;
 		public string CustomSpriteManager { get { return _customSpriteManager; } }
 
 		[SerializeField]
-		string _customFontManager;
+		string _customFontManager = null;
 		public string CustomFontManager { get { return _customFontManager; } }
 
 		[SerializeField]
-		string _customVocabularyManager;
+		string _customVocabularyManager = null;
 		public string CustomVocabularyManager { get { return _customVocabularyManager; } }
-
-		[SerializeField]
-		string _customEditorVocabularyImporter;
-		public string CustomEditorVocabularyImpoter { get { return _customEditorVocabularyImporter; } }
-
 	}
 }

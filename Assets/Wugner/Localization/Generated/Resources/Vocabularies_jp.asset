@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vocabularyEntries:
   - ID: InventoryView/Hint_InventoryFull
-    Type: 0
-    Remark: Float label which will be displayed when Inventory is full
+    Type: 1
     Language: jp
-    FontName: 
+    Remark: Float label which will be displayed when Inventory is full
     Content: "\u30A2\u30A4\u30C6\u30E0\u304C\u4E00\u676F\u3067\u3059"
+    FontName: 
+    srcInfo: 
   - ID: Common/Button_Next
     Type: 0
-    Remark: Common button for next step in navigation
     Language: jp
-    FontName: 
+    Remark: Common button for next step in navigation
     Content: "\u6B21\u3078"
+    FontName: 
+    srcInfo: 

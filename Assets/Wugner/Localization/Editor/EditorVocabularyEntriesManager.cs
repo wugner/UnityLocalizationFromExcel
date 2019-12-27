@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
@@ -6,16 +6,16 @@ using System.Collections;
 
 namespace Wugner.Localize
 {
-	public class EditorMultiLanguageEntryCollection
+	public class EditorVocabularyEntriesManager
 	{
-		static EditorMultiLanguageEntryCollection _instance;
-		public static EditorMultiLanguageEntryCollection Instance
+		static EditorVocabularyEntriesManager _instance;
+		public static EditorVocabularyEntriesManager Instance
 		{
 			get
 			{
 				if (_instance == null)
 				{
-					_instance = new EditorMultiLanguageEntryCollection();
+					_instance = new EditorVocabularyEntriesManager();
 					_instance.LoadEntries();
 				}
 				return _instance;
@@ -31,7 +31,7 @@ namespace Wugner.Localize
 			}
 			else
 			{
-				_instance = new EditorMultiLanguageEntryCollection();
+				_instance = new EditorVocabularyEntriesManager();
 			}
 			_instance.LoadEntries();
 		}
