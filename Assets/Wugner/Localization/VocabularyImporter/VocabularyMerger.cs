@@ -1,17 +1,37 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Wugner.Localize.Importer
 {
+	public struct MergeError
+	{
+		public string ID;
+		public string Language;
+		public string FieldName;
+
+		public string SrcInfoA;
+		public string ValueA;
+		public string SrcInfoB;
+		public string ValueB;
+
+		public override string ToString()
+		{
+			return $"Same id[{ID}] language[{Language}] field[{FieldName}] but different value. \n"
+				+ $"ValueA: {ValueA} \n"
+				+ $"SrcInfoA: {SrcInfoA} \n"
+				+ $"ValueB: {ValueB} \n"
+				+ $"SrcInfoB: {SrcInfoB} \n";
+		}
+	}
+
 	public class VocabularyMerger
 	{
+		public List<MergeError> Errors = new List<MergeError>();
 		public Dictionary<string, VocabularyEntryCollection> MergedDataByLanguage { get; }
 			= new Dictionary<string, VocabularyEntryCollection>();
 
-		public void Add(IEnumerable<VocabularyEntry> entries, Action<string> errorMessageCallback)
+		public void Add(IEnumerable<VocabularyEntry> entries)
 		{
 			foreach (var from in entries)
 			{
@@ -27,12 +47,12 @@ namespace Wugner.Localize.Importer
 				}
 				else
 				{
-					MergeEntry(from, to, errorMessageCallback);
+					MergeEntry(from, to);
 				}
 			}
 		}
 
-		protected virtual void MergeEntry(VocabularyEntry from, VocabularyEntry to, Action<string> errorMessageCallback)
+		protected virtual void MergeEntry(VocabularyEntry from, VocabularyEntry to)
 		{
 			var fields = typeof(VocabularyEntry).GetFields();
 			foreach (var f in fields)
@@ -46,32 +66,43 @@ namespace Wugner.Localize.Importer
 				if (f.Name == "ExtraInfo")
 				{
 					var fromDictionary = fromValue as Dictionary<string, string>;
-					var toDictionary = toValue as Dictionary<string, string>;
-					if (toDictionary != null) {
-						if (fromDictionary == null)
-						{
-							fromDictionary = new Dictionary<string, string>();
-							f.SetValue(from, fromDictionary);
-						}
+					if (fromDictionary == null)
+						continue;
 
-						foreach (var toDictKv in toDictionary)
+					var toDictionary = toValue as Dictionary<string, string>;
+					if (toDictionary == null)
+					{
+						toDictionary = new Dictionary<string, string>();
+						f.SetValue(to, toDictionary);
+					}
+
+					foreach (var fromDictKv in fromDictionary)
+					{
+						var key = fromDictKv.Key;
+						if (toDictionary.TryGetValue(key, out string toDictValue))
 						{
-							if (fromDictionary.TryGetValue(toDictKv.Key, out string fromDictValue))
+							var (success, data) = MergeData(fromDictKv.Value, toDictValue);
+							if (success)
 							{
-								var (success, data) = MergeData(fromDictValue, toDictKv.Value);
-								if (success)
-									fromDictionary[toDictKv.Key] = data as string;
-								else
-								{
-									errorMessageCallback?.Invoke(
-										string.Format("Found diffrent value set for same ID {0}. at field {1}.{2}  src info: {3}. {4}",
-										to.ID, f.Name, toDictKv.Key, from.srcInfo, to.srcInfo));
-								}
+								toDictionary[key] = data as string;
 							}
 							else
 							{
-								fromDictionary[toDictKv.Key] = toDictKv.Value;
+								Errors.Add(new MergeError()
+								{
+									ID = from.ID,
+									Language = from.Language,
+									FieldName = f.Name + "." + fromDictKv.Key,
+									SrcInfoA = from.SrcInfo,
+									ValueA = toDictValue,
+									SrcInfoB = to.SrcInfo,
+									ValueB = fromDictKv.Value
+								});
 							}
+						}
+						else
+						{
+							toDictionary[key] = fromDictKv.Value;
 						}
 					}
 				}
@@ -84,9 +115,16 @@ namespace Wugner.Localize.Importer
 					}
 					else
 					{
-						errorMessageCallback?.Invoke(
-							string.Format("Found diffrent value set for same ID {0} at field {1}  src info: {2}. {3}",
-							to.ID, f.Name, from.srcInfo, to.srcInfo));
+						Errors.Add(new MergeError()
+						{
+							ID = from.ID,
+							Language = from.Language,
+							FieldName = f.Name,
+							SrcInfoA = from.SrcInfo,
+							ValueA = fromValue.ToString(),
+							SrcInfoB = to.SrcInfo,
+							ValueB = toValue.ToString()
+						});
 					}
 				}
 			}

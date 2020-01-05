@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Wugner.OpenXml;
+using ExcelDataReader;
+using System.Data;
 
 namespace Wugner.Localize.Importer
 {
@@ -12,26 +14,34 @@ namespace Wugner.Localize.Importer
 	{
 		public List<VocabularyEntry> Import(byte[] bytes)
 		{
+			List<VocabularyEntry> ret = new List<VocabularyEntry>();
+
 			var stream = new System.IO.MemoryStream(bytes);
-			var reader = ExcelDataReader.ExcelReaderFactory.CreateBinaryReader(stream);
-			
-			//List<VocabularyEntry> ret = new List<VocabularyEntry>();
+			using (var reader = ExcelReaderFactory.CreateBinaryReader(stream))
+			{
+				var result = reader.AsDataSet();
 
-			//var excel = new OpenXmlParser();
-			//excel.LoadXml(fileContent);
-			
-			//foreach (var sheet in excel)
-			//{
-			//	sheet.Value.SetHeaderAndSelectRow(1);
-			//	var dataWithHeader = sheet.Value.Select(row => row.ValuesWithHeader.ToDictionary(kv => kv.Key, kv => kv.Value.StringValue));
-			//	var processor = new TableDataProcessor();
-			//	var entries = processor.Analyze(dataWithHeader);
+                foreach (DataTable sheet in result.Tables)
+                {
+                    var headerRow = sheet.Rows[0];
+					var headerRowStringList = headerRow.ItemArray.Select(o => o.ToString()).ToList();
 
-			//	ret.AddRange(entries);
-			//}
+					var valueList = new List<List<string>>();
+					for (var i = 1; i < sheet.Rows.Count; i++)
+                    {
+						var row = sheet.Rows[i];
+						var rowStringList = row.ItemArray.Select(o => o.ToString()).ToList();
+						valueList.Add(rowStringList);
+					}
 
-			return null;
+					var processor = new TableDataProcessor();
+					var entries = processor.Analyze(headerRowStringList, valueList);
+
+					ret.AddRange(entries);
+				}
+			}
+
+			return ret;
 		}
-
 	}
 }

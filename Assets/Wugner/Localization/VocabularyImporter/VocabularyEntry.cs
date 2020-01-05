@@ -27,6 +27,6 @@ namespace Wugner.Localize
 		/// file name or more detail info for this entry from
 		/// used for debugging output
 		/// </summary>
-		public string srcInfo;
+		public string SrcInfo;
 	}
 }

@@ -47,15 +47,20 @@ namespace Wugner.Localize
                     {
                         var text = File.ReadAllText(p);
                         var entries = textImporter.Import(text);
-                        merger.Add(entries, Debug.LogWarning);
+                        merger.Add(entries);
                     }
                     else if (importer is IBinaryVocabularyImporter binaryImporter)
                     {
                         var bytes = File.ReadAllBytes(p);
                         var entries = binaryImporter.Import(bytes);
-                        merger.Add(entries, Debug.LogWarning);
+                        merger.Add(entries);
                     }
                 }
+            }
+
+            foreach (var err in merger.Errors)
+            {
+                Debug.LogWarning(err.ToString());
             }
 
             var entriesSeperatedByLanguage = merger.MergedDataByLanguage;
