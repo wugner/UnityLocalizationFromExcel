@@ -53,7 +53,7 @@ namespace Wugner.Localize
 				serializedObject.ApplyModifiedProperties();
 				return;
 			}
-			var ids = relatedEntryType == VocabularyEntryType.Text ? EditorVocabularyEntriesManager.Instance.TextIDs : EditorVocabularyEntriesManager.Instance.ImageIDs;
+			var ids = relatedEntryType == EntryType.Text ? EditorVocabularyEntriesManager.Instance.TextIDs : EditorVocabularyEntriesManager.Instance.ImageIDs;
 			if (!ids.Contains(idProp.stringValue))
 			{
 				EditorGUILayout.HelpBox("Id is not exist! Please reselect one", MessageType.Error);
@@ -79,7 +79,7 @@ namespace Wugner.Localize
 				EditorGUI.LabelField(prefixRect, "Preview");
 
 				var previewLanguageProp = serializedObject.FindProperty("_previewLanguage");
-				var entryInMultiLanguage = relatedEntryType == VocabularyEntryType.Text ?
+				var entryInMultiLanguage = relatedEntryType == EntryType.Text ?
 					EditorVocabularyEntriesManager.Instance.GetTextEntry(idProp.stringValue) : EditorVocabularyEntriesManager.Instance.GetImageEntry(idProp.stringValue);
 
 				var languages = entryInMultiLanguage.Languages.ToList();

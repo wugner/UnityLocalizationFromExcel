@@ -9,12 +9,12 @@ namespace Wugner.Localize
 {
     public interface IEditorVocabularyAssetGenerator
     {
-        void GenerateVocabularyAssets(IEnumerable<VocabularyEntryCollection> languageSepratedvocabularyEntryList);
+        void GenerateVocabularyAssets(IEnumerable<RawVocabularyEntryCollection> languageSepratedvocabularyEntryList);
     }
 
     public class EditorVocabularyAssetGenerator
     {
-        public void GenerateVocabularyAssets(IEnumerable<VocabularyEntryCollection> languageSepratedvocabularyEntryList)
+        public void GenerateVocabularyAssets(IEnumerable<RawVocabularyEntryCollection> languageSepratedvocabularyEntryList)
         {
             //Generate assets that seperated by languages.
             //These assets are not only loaded at runtime to display text, but also used in editor mode to provide id selection and preview function.
@@ -28,7 +28,7 @@ namespace Wugner.Localize
                 UnityEditor.EditorUtility.SetDirty(vocabularyAsset);
 
                 vocabularyAsset.VocabularyEntries.Clear();
-                vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap);
+                vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap.Cast<VocabularyEntry>());
             }
             //var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
             //foreach (var map in vocabularyMapList)

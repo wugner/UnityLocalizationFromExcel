@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Wugner.Localize.Importer;
 
 namespace Wugner.Localize
 {
 	[RequireComponent(typeof(Image))]
 	public class LocalizationImage : BaseLocalizationUI
 	{
-		public override VocabularyEntryType RelatedEntryType { get { return VocabularyEntryType.Image; } }
+		public override EntryType RelatedEntryType { get { return EntryType.Image; } }
 
 		Image _image;
 		Image ImageComponent

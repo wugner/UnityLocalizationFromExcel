@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Wugner.Localize
 {
-	public enum VocabularyEntryType
-	{
-		None = 0,
-		Text,
-		Image
-	}
-
-	[System.Serializable]
-	public class VocabularyEntry
+	[Serializable]
+	public class RawVocabularyEntry
 	{
 		public string ID;
-		public VocabularyEntryType Type;
+		/// <summary>
+		/// Text or Image
+		/// </summary>
+		public string Type;
 		public string Language;
 		public string Remark;
 		public string Content;
@@ -22,11 +19,10 @@ namespace Wugner.Localize
 		public int? FontSize;
 
 		public Dictionary<string, string> ExtraInfo;
-
 		/// <summary>
 		/// file name or more detail info for this entry from
 		/// used for debugging output
 		/// </summary>
-		public string SrcInfo;
+		public string SourceInfo;
 	}
 }

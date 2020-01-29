@@ -15,15 +15,15 @@ namespace Wugner.Localize
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
 				return;
 
-			EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig));
+			EditorLocalUtility.GetOrCreateConfig();
+            EditorLocalUtility.GetEditorVocalbularyImportConfig();
             EditorVocabularyEntriesManager.Reload();
 		}
 
 		[MenuItem("Localization/Open Config")]
 		static void OpenConfig()
 		{
-			var config = EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+			var config = EditorLocalUtility.GetOrCreateConfig();
 			Selection.activeObject = config;
         }
 
@@ -31,12 +31,7 @@ namespace Wugner.Localize
         static void ReimportVocabularyFiles()
 		{
             var merger = new Importer.VocabularyMerger();
-
-            if (!(EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig))
-                is IEditorVocabularyImportConfig importerConfig))
-            {
-                throw new Exception($"Asset {Constant.ASSETPATH_IMPORTER_CONFIG} does not implement IEditorVocabularyImportConfig!");
-            }
+            var importerConfig = EditorLocalUtility.GetEditorVocalbularyImportConfig();
 
             foreach (var (type, filePaths) in importerConfig.GetImportersInfo())
             {
@@ -45,15 +40,33 @@ namespace Wugner.Localize
                 {
                     if (importer is ITextVocabularyImporter textImporter)
                     {
-                        var text = File.ReadAllText(p);
-                        var entries = textImporter.Import(text);
-                        merger.Add(entries);
+                        try
+                        {
+                            var text = File.ReadAllText(p);
+                            var entries = textImporter.Import(text);
+                            entries.ForEach(e => e.SourceInfo = p);
+                            merger.Add(entries);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning("Error in read file: " + p);
+                            Debug.LogWarning(e.ToString());
+                        }
                     }
                     else if (importer is IBinaryVocabularyImporter binaryImporter)
                     {
-                        var bytes = File.ReadAllBytes(p);
-                        var entries = binaryImporter.Import(bytes);
-                        merger.Add(entries);
+                        try
+                        {
+                            var bytes = File.ReadAllBytes(p);
+                            var entries = binaryImporter.Import(bytes);
+                            entries.ForEach(e => e.SourceInfo = p);
+                            merger.Add(entries);
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.LogWarning("Error in read file: " + p);
+                            Debug.LogWarning(e.ToString());
+                        }
                     }
                 }
             }
@@ -78,16 +91,16 @@ namespace Wugner.Localize
             EditorVocabularyEntriesManager.Reload();
         }
 
-        static void GenerateVocabularyAssets(IEnumerable<VocabularyEntryCollection> languageSepratedvocabularyEntryList)
+        static void GenerateVocabularyAssets(IEnumerable<RawVocabularyEntryCollection> languageSepratedvocabularyEntryList)
         {
             var assetGenerator = new EditorVocabularyAssetGenerator();
             assetGenerator.GenerateVocabularyAssets(languageSepratedvocabularyEntryList);
         }
 
-        static void GenerateIdConstantSourceFile(VocabularyEntryCollection vocabularyCollection)
+        static void GenerateIdConstantSourceFile(RawVocabularyEntryCollection vocabularyCollection)
         {
-            var config = EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, config.IdConstantNameSpace, config.IdConstantClassName);
+            var importerConfig = EditorLocalUtility.GetEditorVocalbularyImportConfig();
+            EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, importerConfig.IdConstantNameSpace, importerConfig.IdConstantClassName);
         }
     }
 }

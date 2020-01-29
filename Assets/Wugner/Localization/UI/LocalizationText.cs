@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Wugner.Localize.Importer;
 
 namespace Wugner.Localize
 {
 	[RequireComponent(typeof(Text))]
 	public class LocalizationText : BaseLocalizationUI
 	{
-		public override VocabularyEntryType RelatedEntryType { get { return VocabularyEntryType.Text; } }
+		public override EntryType RelatedEntryType { get { return EntryType.Text; } }
 
 		object[] _params;
 
@@ -24,7 +25,7 @@ namespace Wugner.Localize
 		
 		public void Set(string id, params object[] objs)
 		{
-			_areadyHasValue = true;
+			_alreadyHasValue = true;
 			_id = id;
 			_params = objs;
 

@@ -1,23 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
+using Wugner.Localize.Importer;
 
 namespace Wugner.Localize
 {
     public class VocabulariesAsset : ScriptableObject
     {
-        string _language;
-        public string Language { get { return _language; } set { _language = value; } }
+        [SerializeField]
+        string _language = null;
+        public string Language => _language;
 
         [SerializeField]
-        List<VocabularyEntry> _vocabularyEntries;
-        public List<VocabularyEntry> VocabularyEntries
-        {
-            get
-            {
-                if (_vocabularyEntries == null)
-                    _vocabularyEntries = new List<VocabularyEntry>();
-                return _vocabularyEntries;
-            }
-        }
+        List<VocabularyEntry> _vocabularyEntries = new List<VocabularyEntry>();
+        public List<VocabularyEntry> VocabularyEntries => _vocabularyEntries;
     }
 }

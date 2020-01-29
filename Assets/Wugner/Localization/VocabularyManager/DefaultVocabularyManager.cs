@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Wugner.Localize
@@ -13,6 +13,7 @@ namespace Wugner.Localize
             foreach (var asset in assetsList)
             {
                 LoadEntries(asset);
+                Resources.UnloadAsset(asset);
             }
         }
 
@@ -36,8 +37,6 @@ namespace Wugner.Localize
                         FontName = entry.FontName,
                     });
                 }
-
-                Resources.UnloadAsset(asset);
             }
         }
 
@@ -52,5 +51,19 @@ namespace Wugner.Localize
             }
 			return v;
 		}
+
+        public void AddExtraLanguage(string language, IEnumerable<RuntimeVocabularyEntry> entries)
+        {
+            Dictionary<string, RuntimeVocabularyEntry> entryMap;
+            if (!_languageToEntryMap.TryGetValue(language, out entryMap))
+            {
+                entryMap = new Dictionary<string, RuntimeVocabularyEntry>();
+                _languageToEntryMap.Add(language, entryMap);
+            }
+            foreach (var e in entries)
+            {
+                entryMap.Add(e.ID, e);
+            }
+        }
 	}
 }

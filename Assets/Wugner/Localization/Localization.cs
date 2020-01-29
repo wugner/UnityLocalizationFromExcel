@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,8 +30,10 @@ namespace Wugner.Localize
 
         ILocalizationSpriteManager _spriteManager;
 		public ILocalizationSpriteManager SpriteManager { get { return _spriteManager; } }
+
 		ILocalizationFontManager _fontManager;
 		public ILocalizationFontManager FontManager { get { return _fontManager; } }
+
 		ILocalizationVocabularyManager _vocabularyManager;
 
 		string _currentLanguage;
@@ -48,96 +50,40 @@ namespace Wugner.Localize
 
 			var config = Resources.Load<LocalizationConfig>("LocalizationConfig");
             _languageSettings = config.LanguageSettings;
-			InitSpritesManager(config.CustomSpriteManager);
-			InitFontManager(config.CustomFontManager);
-			InitVocabularyManager(config.CustomVocabularyManager);
+
+			if (!config.CustomInit)
+			{
+				InitSpritesManager();
+				InitFontManager();
+				InitVocabularyManager();
+			}
 		}
 
-		void InitSpritesManager(string customSpriteManagerName)
+		public void CustomInit(
+			(ILocalizationVocabularyManager customVocabularManager, 
+			ILocalizationSpriteManager customSpriteManager, 
+			ILocalizationFontManager customFontManager) customInitConfig)
 		{
-			if (!string.IsNullOrEmpty(customSpriteManagerName))
-			{
-				var type = Type.GetType(customSpriteManagerName);
-				if (type == null)
-				{
-					Debug.LogErrorFormat("Can not find custom sprite manager [{0}]", customSpriteManagerName);
-				}
-				else
-				{
-					if (type.IsSubclassOf(typeof(MonoBehaviour)))
-						_spriteManager = gameObject.AddComponent(type) as ILocalizationSpriteManager;
-					else
-						_spriteManager = Activator.CreateInstance(type) as ILocalizationSpriteManager;
+			InitSpritesManager(customInitConfig.customSpriteManager);
+			InitFontManager(customInitConfig.customFontManager);
+			InitVocabularyManager(customInitConfig.customVocabularManager);
+		}
 
-					if (_spriteManager == null)
-					{
-						Debug.LogErrorFormat("Custom sprites manager [{0}] does not or implement interface ILocalizationSpritesManager!", customSpriteManagerName);
-					}
-				}
-			}
-			
-			if (_spriteManager == null)
-				_spriteManager = gameObject.AddComponent<DefaultSpriteManager>();
-			
+		void InitSpritesManager(ILocalizationSpriteManager customSpriteManager = null)
+		{	
+			_spriteManager = customSpriteManager ?? gameObject.AddComponent<DefaultSpriteManager>();
 			_spriteManager.Init();
 		}
 
-		void InitFontManager(string customFontManagerName)
+		void InitFontManager(ILocalizationFontManager customFontManager = null)
 		{
-			if (!string.IsNullOrEmpty(customFontManagerName))
-			{
-				var type = Type.GetType(customFontManagerName);
-				if (type == null)
-				{
-					Debug.LogErrorFormat("Can not find custom font manager [{0}]", customFontManagerName);
-				}
-				else
-				{
-
-					if (type.IsSubclassOf(typeof(MonoBehaviour)))
-						_fontManager = gameObject.AddComponent(type) as ILocalizationFontManager;
-					else
-						_fontManager = Activator.CreateInstance(type) as ILocalizationFontManager;
-
-					if (_fontManager == null)
-					{
-						Debug.LogErrorFormat("Custom font manager [{0}] does not exist or implement interface ILocalizationSpritesManager!", customFontManagerName);
-					}
-				}
-			}
-
-			if (_fontManager == null)
-				_fontManager = new DefaultFontManager();
-			
+			_fontManager = customFontManager ?? new DefaultFontManager();
 			_fontManager.Init();
 		}
 
-		void InitVocabularyManager(string customVocabularyManagerName)
+		void InitVocabularyManager(ILocalizationVocabularyManager customVocabularyManager = null)
 		{
-			if (!string.IsNullOrEmpty(customVocabularyManagerName))
-			{
-				var type = Type.GetType(customVocabularyManagerName);
-				if (type == null)
-				{
-					Debug.LogErrorFormat("Can not find custom vocabulary manager [{0}]", customVocabularyManagerName);
-				}
-				else
-				{
-					if (type.IsSubclassOf(typeof(MonoBehaviour)))
-						_vocabularyManager = gameObject.AddComponent(type) as ILocalizationVocabularyManager;
-					else
-						_vocabularyManager = Activator.CreateInstance(type) as ILocalizationVocabularyManager;
-
-					if (_vocabularyManager == null)
-					{
-						Debug.LogErrorFormat("Custom vocabulary manager [{0}] does not exist or implement interface ILocalizationSpritesManager!", customVocabularyManagerName);
-					}
-				}
-			}
-
-			if (_vocabularyManager == null)
-				_vocabularyManager = new DefaultVocabularyManager();
-			
+			_vocabularyManager = customVocabularyManager ?? new DefaultVocabularyManager();
 			_vocabularyManager.Init();
 		}
 
@@ -156,8 +102,7 @@ namespace Wugner.Localize
 				_currentDefaultFont = Font.CreateDynamicFontFromOSFont("arial", 12);
 			}
 
-			if (_onSwitchLanguage != null)
-				_onSwitchLanguage();
+			_onSwitchLanguage?.Invoke();
 		}
 
         RuntimeVocabularyEntry GetEntryImp(string id)
@@ -169,12 +114,11 @@ namespace Wugner.Localize
                 SwitchLanguage(_languageSettings[0].Language);
             }
 
-            RuntimeVocabularyEntry ret;
-            if (Instance._currentVacabularies.TryGetValue(id.Trim('/'), out ret))
-            {
-                return ret;
-            }
-            throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id.Trim('/'), Instance._currentLanguage));
+			if (Instance._currentVacabularies.TryGetValue(id.Trim('/'), out RuntimeVocabularyEntry ret))
+			{
+				return ret;
+			}
+			throw new Exception(string.Format("Can not get localize data for id {0}. Current language {1}", id.Trim('/'), Instance._currentLanguage));
         }
         public static RuntimeVocabularyEntry GetEntry(string id)
 		{

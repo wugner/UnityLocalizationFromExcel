@@ -20,7 +20,7 @@ namespace Wugner.Localize.Importer
 			{ "FONT", "Font" },
 		};
 
-		public List<VocabularyEntry> Analyze(List<string> header, IEnumerable<List<string>> body)
+		public List<RawVocabularyEntry> Analyze(List<string> header, IEnumerable<List<string>> body)
 		{
 			var bodyDataWithHeader = new List<Dictionary<string, string>>();
 			foreach (var bodyRow in body)
@@ -42,12 +42,12 @@ namespace Wugner.Localize.Importer
 			return Analyze(bodyDataWithHeader);
 		}
 
-		public List<VocabularyEntry> Analyze(IEnumerable<Dictionary<string, string>> bodyDataWithHeader)
+		public List<RawVocabularyEntry> Analyze(IEnumerable<Dictionary<string, string>> bodyDataWithHeader)
 		{
-			var ret = new List<VocabularyEntry>();
+			var ret = new List<RawVocabularyEntry>();
 
 			Dictionary<string, string> sharedData = new Dictionary<string, string>();
-			Dictionary<string, VocabularyEntry> languageToEntry = new Dictionary<string, VocabularyEntry>();
+			Dictionary<string, RawVocabularyEntry> languageToEntry = new Dictionary<string, RawVocabularyEntry>();
 
 			foreach (var row in bodyDataWithHeader)
 			{
@@ -70,7 +70,7 @@ namespace Wugner.Localize.Importer
 					{
 						if (!languageToEntry.TryGetValue(language, out var entry))
 						{
-							entry = new VocabularyEntry();
+							entry = new RawVocabularyEntry();
 							entry.Language = language;
 							languageToEntry.Add(language, entry);
 						}
@@ -90,7 +90,7 @@ namespace Wugner.Localize.Importer
 			return ret;
 		}
 
-		void SetValueToEntry(VocabularyEntry entry, string header, string value)
+		void SetValueToEntry(RawVocabularyEntry entry, string header, string value)
 		{
 			if (!_headerToField.TryGetValue(header, out string fieldName))
 				fieldName = header;

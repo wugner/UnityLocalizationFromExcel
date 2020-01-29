@@ -8,10 +8,10 @@ namespace Wugner.Localize
 {
 	public interface ITextVocabularyImporter
 	{
-		List<VocabularyEntry> Import(string text);
+		List<RawVocabularyEntry> Import(string text);
 	}
 	public interface IBinaryVocabularyImporter
 	{
-		List<VocabularyEntry> Import(byte[] bytes);
+		List<RawVocabularyEntry> Import(byte[] bytes);
 	}
 }

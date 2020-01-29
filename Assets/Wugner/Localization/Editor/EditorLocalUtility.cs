@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using Wugner.Localize;
 
 namespace Wugner
 {
@@ -38,6 +39,20 @@ namespace Wugner
 				AssetDatabase.CreateAsset(ret, path);
 			}
 			return ret;
+		}
+
+		public static LocalizationConfig GetOrCreateConfig()
+		{
+			return EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+		}
+		public static IEditorVocabularyImportConfig GetEditorVocalbularyImportConfig()
+		{
+			if (!(EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig))
+				is IEditorVocabularyImportConfig importerConfig))
+			{
+				throw new Exception($"Asset {Constant.ASSETPATH_IMPORTER_CONFIG} does not implement IEditorVocabularyImportConfig!");
+			}
+			return importerConfig;
 		}
 	}
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Collections;
+using Wugner.Localize.Importer;
 
 namespace Wugner.Localize
 {
@@ -55,7 +56,7 @@ namespace Wugner.Localize
 
 		public void Add(VocabularyEntry entry)
 		{
-			var entryMap = entry.Type == VocabularyEntryType.Text ? _textEntries : _imageEntries;
+			var entryMap = entry.Type == EntryType.Text ? _textEntries : _imageEntries;
 
 			EditorMultiLanguageEntry multiLanguageEntry;
 			if (!entryMap.TryGetValue(entry.ID, out multiLanguageEntry))
@@ -79,9 +80,9 @@ namespace Wugner.Localize
 			}
 		}
 
-		public ICollection<EditorMultiLanguageEntry> GetEntries(VocabularyEntryType type)
+		public ICollection<EditorMultiLanguageEntry> GetEntries(EntryType type)
 		{
-			return type == VocabularyEntryType.Text ? TextEntries : ImageEntries;
+			return type == EntryType.Text ? TextEntries : ImageEntries;
 		}
 
 		public EditorMultiLanguageEntry GetTextEntry(string id)

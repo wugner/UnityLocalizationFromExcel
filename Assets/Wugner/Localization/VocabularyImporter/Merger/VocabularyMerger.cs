@@ -28,16 +28,16 @@ namespace Wugner.Localize.Importer
 	public class VocabularyMerger
 	{
 		public List<MergeError> Errors = new List<MergeError>();
-		public Dictionary<string, VocabularyEntryCollection> MergedDataByLanguage { get; }
-			= new Dictionary<string, VocabularyEntryCollection>();
+		public Dictionary<string, RawVocabularyEntryCollection> MergedDataByLanguage { get; }
+			= new Dictionary<string, RawVocabularyEntryCollection>();
 
-		public void Add(IEnumerable<VocabularyEntry> entries)
+		public void Add(IEnumerable<RawVocabularyEntry> entries)
 		{
 			foreach (var from in entries)
 			{
 				if (!MergedDataByLanguage.TryGetValue(from.Language, out var entryCollection))
 				{
-					entryCollection = new VocabularyEntryCollection(from.Language);
+					entryCollection = new RawVocabularyEntryCollection(from.Language);
 					MergedDataByLanguage.Add(from.Language, entryCollection);
 				}
 
@@ -52,9 +52,9 @@ namespace Wugner.Localize.Importer
 			}
 		}
 
-		protected virtual void MergeEntry(VocabularyEntry from, VocabularyEntry to)
+		protected virtual void MergeEntry(RawVocabularyEntry from, RawVocabularyEntry to)
 		{
-			var fields = typeof(VocabularyEntry).GetFields();
+			var fields = typeof(RawVocabularyEntry).GetFields();
 			foreach (var f in fields)
 			{
 				if (f.Name == "ID" || f.Name == "Language" || f.Name == "srcInfo")
@@ -93,9 +93,9 @@ namespace Wugner.Localize.Importer
 									ID = from.ID,
 									Language = from.Language,
 									FieldName = f.Name + "." + fromDictKv.Key,
-									SrcInfoA = from.SrcInfo,
+									SrcInfoA = from.SourceInfo,
 									ValueA = toDictValue,
-									SrcInfoB = to.SrcInfo,
+									SrcInfoB = to.SourceInfo,
 									ValueB = fromDictKv.Value
 								});
 							}
@@ -120,9 +120,9 @@ namespace Wugner.Localize.Importer
 							ID = from.ID,
 							Language = from.Language,
 							FieldName = f.Name,
-							SrcInfoA = from.SrcInfo,
+							SrcInfoA = from.SourceInfo,
 							ValueA = fromValue.ToString(),
-							SrcInfoB = to.SrcInfo,
+							SrcInfoB = to.SourceInfo,
 							ValueB = toValue.ToString()
 						});
 					}
@@ -132,8 +132,8 @@ namespace Wugner.Localize.Importer
 
 		private (bool success, object data) MergeData(object from, object to)
 		{
-			from = EmptyStringToNull(ZeroEnumToNull(from));
-			to = EmptyStringToNull(ZeroEnumToNull(to));
+			from = EmptyStringToNull(from);
+			to = EmptyStringToNull(to);
 
 			if (to == null)
 				return (true, from);
@@ -152,14 +152,6 @@ namespace Wugner.Localize.Importer
 		private object EmptyStringToNull(object t)
 		{
 			if (t is string && (string)t == "")
-			{
-				return null;
-			}
-			return t;
-		}
-		private object ZeroEnumToNull(object t)
-		{
-			if (t != null && t is Enum && (int)t == 0)
 			{
 				return null;
 			}

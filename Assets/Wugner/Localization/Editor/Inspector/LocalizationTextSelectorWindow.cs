@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -8,7 +8,7 @@ namespace Wugner.Localize
 	public class LocalizationTextSelectorWindow : EditorWindow
 	{
 		static LocalizationTextSelectorWindow _window;
-		public static void Show(VocabularyEntryType entryType, string current, Action<string> onSelect)
+		public static void Show(EntryType entryType, string current, Action<string> onSelect)
 		{
 			if (_window == null)
 				_window = CreateInstance<LocalizationTextSelectorWindow>();
@@ -18,7 +18,7 @@ namespace Wugner.Localize
 			_window.ShowAuxWindow();
 		}
 
-		VocabularyEntryType _entryType;
+		EntryType _entryType;
 		string _filter;
 		string _current;
 		Action<string> _onSelect;

@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Wugner.Localize.Importer;
 
 namespace Wugner.Localize
 {
 	public abstract class BaseLocalizationUI : MonoBehaviour
 	{
-		public abstract VocabularyEntryType RelatedEntryType { get; }
+		public abstract EntryType RelatedEntryType { get; }
 
 		[SerializeField]
 		protected bool _setAtRuntime;
 		[SerializeField]
 		protected string _id;
 		
-		protected bool _areadyHasValue;
+		protected bool _alreadyHasValue;
 
 		protected virtual void Start()
 		{
-			if (!_setAtRuntime && !_areadyHasValue)
+			if (!_setAtRuntime && !_alreadyHasValue)
 				Set(_id);
 
 			Localization.AddOnSwitchLanguageDelegate(OnSwitchLanguage);
@@ -30,13 +30,13 @@ namespace Wugner.Localize
 
 		protected virtual void OnSwitchLanguage()
 		{
-			if (_areadyHasValue)
+			if (_alreadyHasValue)
 				Set(_id);
 		}
 
 		public virtual void Set(string id)
 		{
-			_areadyHasValue = true;
+			_alreadyHasValue = true;
 			_id = id;
 
 			var entry = Localization.GetEntry(_id);

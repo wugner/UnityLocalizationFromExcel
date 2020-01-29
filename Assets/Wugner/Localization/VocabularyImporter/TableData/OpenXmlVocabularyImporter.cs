@@ -10,9 +10,9 @@ namespace Wugner.Localize.Importer
 {
 	public class OpenXmlVocabularyImporter : ITextVocabularyImporter
 	{
-		public List<VocabularyEntry> Import(string fileContent)
+		public List<RawVocabularyEntry> Import(string fileContent)
 		{
-			List<VocabularyEntry> ret = new List<VocabularyEntry>();
+			List<RawVocabularyEntry> ret = new List<RawVocabularyEntry>();
 
 			var excel = new OpenXmlParser();
 			excel.LoadXml(fileContent);

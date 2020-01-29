@@ -9,7 +9,7 @@ namespace Wugner.Localize
 {
 	public class EditorConstantFileGenerator
 	{
-		public static void CreateSourceFile(VocabularyEntryCollection data, string @namespace, string baseClassName)
+		public static void CreateSourceFile(RawVocabularyEntryCollection data, string @namespace, string baseClassName)
 		{
 			var list = data.Select(t => new IDWithComment(t.ID, t.Remark)).ToList();
 			var str = GenerateFileContent(list, @namespace, baseClassName);
