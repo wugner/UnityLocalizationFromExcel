@@ -16,7 +16,7 @@ namespace Wugner.Localize.Editor
 				return;
 
 			EditorLocalUtility.GetOrCreateConfig();
-            EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
+            EditorLocalUtility.GetOrCreateEditorConfig();
             EditorVocabularyEntriesManager.Reload();
 		}
 
@@ -31,7 +31,7 @@ namespace Wugner.Localize.Editor
         private static void ReimportVocabularyFiles()
 		{
             var merger = new Importer.VocabularyMerger();
-            var config = EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
+            var config = EditorLocalUtility.GetOrCreateEditorConfig();
 
             foreach(var seq in config.ImporterSequence)
             {
@@ -67,8 +67,8 @@ namespace Wugner.Localize.Editor
 
         static void GenerateIdConstantSourceFile(RawVocabularyEntryCollection vocabularyCollection)
         {
-            var importerConfig = EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
-            EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, importerConfig.IdConstantNameSpace, importerConfig.IdConstantClassName);
+            var importerConfig = EditorLocalUtility.GetOrCreateEditorConfig();
+            EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, importerConfig.IdConstantClassNameWithNameSpace);
         }
     }
 }

@@ -8,10 +8,10 @@ namespace Wugner.Localize.Editor
 	public class DefaultEditorVocabularyImportSequencer : EditorVocabularyImportSequencer
 	{
 		[SerializeField]
-		List<string> _openXmlfileOrFolderPaths = null;
+		List<string> _openXmlTableFileOrFolderPaths = null;
 
 		[SerializeField]
-		List<string> _csvfileOrFolderPaths = null;
+		List<string> _csvTableFileOrFolderPaths = null;
 
 		[SerializeField]
 		List<string> _xmlArrayfileOrFolderPaths = null;
@@ -19,8 +19,8 @@ namespace Wugner.Localize.Editor
 		public override List<RawVocabularyEntry> Import()
 		{
 			List<RawVocabularyEntry> ret = new List<RawVocabularyEntry>();
-			ret.AddRange(Import(new Importer.OpenXmlTableVocabularyImporter(), _openXmlfileOrFolderPaths));
-			ret.AddRange(Import(new Importer.CsvTableVocabularyImporter(), _csvfileOrFolderPaths));
+			ret.AddRange(Import(new Importer.OpenXmlTableVocabularyImporter(), _openXmlTableFileOrFolderPaths));
+			ret.AddRange(Import(new Importer.CsvTableVocabularyImporter(), _csvTableFileOrFolderPaths));
 			ret.AddRange(Import(new Importer.XmlArrayVocabularyImporter(), _xmlArrayfileOrFolderPaths));
 
 			return ret;

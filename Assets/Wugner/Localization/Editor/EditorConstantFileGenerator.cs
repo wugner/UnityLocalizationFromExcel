@@ -9,8 +9,13 @@ namespace Wugner.Localize.Editor
 {
 	public class EditorConstantFileGenerator
 	{
-		public static void CreateSourceFile(RawVocabularyEntryCollection data, string @namespace, string baseClassName)
+		public static void CreateSourceFile(RawVocabularyEntryCollection data, string classNameWithNameSpace)
 		{
+			if (string.IsNullOrEmpty(classNameWithNameSpace))
+				classNameWithNameSpace = "Wugner.Localize.IDS";
+
+			var (@namespace, baseClassName) = SeprateNameSpaceAndClass(classNameWithNameSpace);
+
 			var list = data.Select(t => new IDWithComment(t.ID, t.Remark)).ToList();
 			var str = GenerateFileContent(list, @namespace, baseClassName);
 
@@ -26,13 +31,14 @@ namespace Wugner.Localize.Editor
 			AssetDatabase.Refresh();
 		}
 
+		static (string @namespcace, string baseClassName) SeprateNameSpaceAndClass(string classNameWithNameSpace)
+		{
+			var index = classNameWithNameSpace.LastIndexOf('.');
+			return (classNameWithNameSpace.Substring(0, index), classNameWithNameSpace.Substring(index + 1));
+		}
+
 		static string GenerateFileContent(List<IDWithComment> list, string @namespace, string baseClassName)
 		{
-			if (string.IsNullOrEmpty(@namespace))
-				@namespace = "Wugner.Localize";
-			if (string.IsNullOrEmpty(baseClassName))
-				baseClassName = "IDS";
-
 			list.Sort((s1, s2) => s1.ID.CompareTo(s2.ID));
 
 			var classInfo = new ClassInfo(1, "");

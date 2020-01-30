@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public interface ILocalizationFontManager
+	public interface IRumtimeFontProvider
 	{
 		void Init();
 		Font GetFont(string fontName);

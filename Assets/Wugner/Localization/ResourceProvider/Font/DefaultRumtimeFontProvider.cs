@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public class DefaultFontManager : ILocalizationFontManager
+	public class DefaultRumtimeFontProvider : IRumtimeFontProvider
 	{
 		Dictionary<string, Font> _fontMap = new Dictionary<string, Font>();
 		Dictionary<string, Font> _defaultFontMap = new Dictionary<string, Font>();

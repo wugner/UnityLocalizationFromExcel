@@ -15,6 +15,9 @@ namespace Wugner.Localize.Editor
 				var folderPath = path.Substring(0, path.LastIndexOf('/'));
 				if (!AssetDatabase.IsValidFolder(folderPath))
 				{
+					if (folderPath.StartsWith("Assets/"))
+						folderPath = folderPath.Substring(7);
+
 					System.IO.Directory.CreateDirectory(Application.dataPath + "/" + folderPath);
 					AssetDatabase.Refresh();
 				}
@@ -28,7 +31,7 @@ namespace Wugner.Localize.Editor
 		{
 			return LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
 		}
-		public static EditorLocalizeConfig GetOrCreateEditorLocalizeConfig()
+		public static EditorLocalizeConfig GetOrCreateEditorConfig()
 		{
 			var config = AssetDatabase.LoadAssetAtPath<EditorLocalizeConfig>(Constant.ASSETPATH_EDITOR_CONFIG);
 			if (config == null)

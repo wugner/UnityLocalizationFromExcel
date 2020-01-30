@@ -8,12 +8,8 @@ namespace Wugner.Localize.Editor
 	public class EditorLocalizeConfig : ScriptableObject
 	{
 		[SerializeField]
-		string _idConstantNameSpace = "Wugner.Localize";
-		public string IdConstantNameSpace => _idConstantNameSpace;
-
-		[SerializeField]
-		string _idConstantClassName = "IDS";
-		public string IdConstantClassName => _idConstantClassName;
+		string _idConstantClassFullName = "Wugner.Localize.IDS";
+		public string IdConstantClassNameWithNameSpace => _idConstantClassFullName;
 
 		[SerializeField]
 		List<EditorVocabularyImportSequencer> _importerSequence;

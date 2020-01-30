@@ -12,12 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c85617316549e948ad627155d64b1f2, type: 3}
   m_Name: LocalizationConfig
   m_EditorClassIdentifier: 
+  _customInit: 0
   _languageSettings: []
-  _localizeExcelFiles: []
-  _localizeExcelFilePaths: []
   _allFonts: []
-  _idConstantNameSpace: 
-  _idConstantClassName: 
-  _customSpriteManager: 
-  _customFontManager: 
-  _customVocabularyManager: 

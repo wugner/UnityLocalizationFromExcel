@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public class DefaultSpriteManager : MonoBehaviour, ILocalizationSpriteManager
+	public class DefaultSimpleSpriteProvider : MonoBehaviour, IRumtimeSpriteProvider
 	{
 		Dictionary<Sprite, int> _referenceCounter = new Dictionary<Sprite, int>();
 

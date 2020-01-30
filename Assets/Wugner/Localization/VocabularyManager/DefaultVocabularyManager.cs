@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-    public class DefaultVocabularyManager : ILocalizationVocabularyManager
+    public class DefaultVocabularyManager : IRuntimeVocabularyManager
 	{
 		Dictionary<string, Dictionary<string, RuntimeVocabularyEntry>> _languageToEntryMap = new Dictionary<string, Dictionary<string, RuntimeVocabularyEntry>>();
 

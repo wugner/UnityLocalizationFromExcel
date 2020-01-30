@@ -13,7 +13,7 @@ namespace Wugner.Localize
 		public int? FontSize;
 		public Dictionary<string, string> ExtraInfo;
 	}
-	public interface ILocalizationVocabularyManager
+	public interface IRuntimeVocabularyManager
 	{
 		void Init();
 		Dictionary<string, RuntimeVocabularyEntry> GetByLanguage(string language);

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Wugner.Localize
 {
-	public interface ILocalizationSpriteManager
+	public interface IRumtimeSpriteProvider
 	{
 		void Init();
 		Sprite GetSprite(string path);

@@ -28,13 +28,13 @@ namespace Wugner.Localize
 		}
         List<LocalizationConfig.LanguageInfo> _languageSettings;
 
-        ILocalizationSpriteManager _spriteManager;
-		public ILocalizationSpriteManager SpriteManager { get { return _spriteManager; } }
+        IRumtimeSpriteProvider _spriteProvider;
+		public IRumtimeSpriteProvider SpriteManager { get { return _spriteProvider; } }
 
-		ILocalizationFontManager _fontManager;
-		public ILocalizationFontManager FontManager { get { return _fontManager; } }
+		IRumtimeFontProvider _fontProvider;
+		public IRumtimeFontProvider FontManager { get { return _fontProvider; } }
 
-		ILocalizationVocabularyManager _vocabularyManager;
+		IRuntimeVocabularyManager _vocabularyManager;
 
 		string _currentLanguage;
 		public string CurrentLanguage { get { return _currentLanguage; } }
@@ -53,35 +53,35 @@ namespace Wugner.Localize
 
 			if (!config.CustomInit)
 			{
-				InitSpritesManager();
-				InitFontManager();
+				InitSpritesProvider();
+				InitFontProvider();
 				InitVocabularyManager();
 			}
 		}
 
 		public void CustomInit(
-			(ILocalizationVocabularyManager customVocabularManager, 
-			ILocalizationSpriteManager customSpriteManager, 
-			ILocalizationFontManager customFontManager) customInitConfig)
+			(IRuntimeVocabularyManager customVocabularManager, 
+			IRumtimeSpriteProvider customSpriteProvider, 
+			IRumtimeFontProvider customFontProvider) customInitConfig)
 		{
-			InitSpritesManager(customInitConfig.customSpriteManager);
-			InitFontManager(customInitConfig.customFontManager);
+			InitSpritesProvider(customInitConfig.customSpriteProvider);
+			InitFontProvider(customInitConfig.customFontProvider);
 			InitVocabularyManager(customInitConfig.customVocabularManager);
 		}
 
-		void InitSpritesManager(ILocalizationSpriteManager customSpriteManager = null)
+		void InitSpritesProvider(IRumtimeSpriteProvider customSpriteProvider = null)
 		{	
-			_spriteManager = customSpriteManager ?? gameObject.AddComponent<DefaultSpriteManager>();
-			_spriteManager.Init();
+			_spriteProvider = customSpriteProvider ?? gameObject.AddComponent<DefaultSimpleSpriteProvider>();
+			_spriteProvider.Init();
 		}
 
-		void InitFontManager(ILocalizationFontManager customFontManager = null)
+		void InitFontProvider(IRumtimeFontProvider customFontProvider = null)
 		{
-			_fontManager = customFontManager ?? new DefaultFontManager();
-			_fontManager.Init();
+			_fontProvider = customFontProvider ?? new DefaultRumtimeFontProvider();
+			_fontProvider.Init();
 		}
 
-		void InitVocabularyManager(ILocalizationVocabularyManager customVocabularyManager = null)
+		void InitVocabularyManager(IRuntimeVocabularyManager customVocabularyManager = null)
 		{
 			_vocabularyManager = customVocabularyManager ?? new DefaultVocabularyManager();
 			_vocabularyManager.Init();
@@ -95,7 +95,7 @@ namespace Wugner.Localize
 			{
 				Debug.LogErrorFormat("Can not find language [{0}]", language);
 			}
-			_currentDefaultFont = _fontManager.GetLanguageDefaultFont(language);
+			_currentDefaultFont = _fontProvider.GetLanguageDefaultFont(language);
 			if (_currentDefaultFont == null)
 			{
 				Debug.LogWarningFormat("Can not find font for language [{0}], use arial", language);
@@ -130,7 +130,7 @@ namespace Wugner.Localize
 			if (string.IsNullOrEmpty(fontName))
 				return Instance._currentDefaultFont;
 
-			var f = Instance._fontManager.GetFont(fontName);
+			var f = Instance._fontProvider.GetFont(fontName);
 			if (f == null)
 				Debug.LogErrorFormat("Can not find font named [{0}], use default [{1}]", fontName, Instance._currentDefaultFont);
 
