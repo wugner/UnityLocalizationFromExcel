@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Created>2015-06-05T18:19:34Z</Created>
+  <LastSaved>2020-01-30T07:12:44Z</LastSaved>
+  <Version>16.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+  <RemovePersonalInformation/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>12315</WindowHeight>
+  <WindowWidth>28800</WindowWidth>
+  <WindowTopX>32767</WindowTopX>
+  <WindowTopY>32767</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="等线" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s62">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table ss:ExpandedColumnCount="9" ss:ExpandedRowCount="3" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="14.25">
+   <Column ss:AutoFitWidth="0" ss:Width="228.75"/>
+   <Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="157.5"/>
+   <Column ss:AutoFitWidth="0" ss:Width="158.25" ss:Span="1"/>
+   <Column ss:Index="6" ss:Width="301.5"/>
+   <Column ss:Index="9" ss:Width="80.25"/>
+   <Row ss:AutoFitHeight="0" ss:StyleID="s62">
+    <Cell><Data ss:Type="String">ID</Data></Cell>
+    <Cell><Data ss:Type="String">TYPE</Data></Cell>
+    <Cell><Data ss:Type="String">CONTENT_en</Data></Cell>
+    <Cell><Data ss:Type="String">CONTENT_cn</Data></Cell>
+    <Cell><Data ss:Type="String">CONTENT_jp</Data></Cell>
+    <Cell><Data ss:Type="String">REMARK</Data></Cell>
+    <Cell><Data ss:Type="String">size</Data></Cell>
+    <Cell><Data ss:Type="String">size_cn</Data></Cell>
+    <Cell><Data ss:Type="String">RightAligin_en</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell><Data ss:Type="String">InventoryView/Hint_InventoryFull</Data></Cell>
+    <Cell><Data ss:Type="String">Text</Data></Cell>
+    <Cell><Data ss:Type="String">Inventory is full</Data></Cell>
+    <Cell><Data ss:Type="String">道具栏已满</Data></Cell>
+    <Cell><Data ss:Type="String">アイテムが一杯です</Data></Cell>
+    <Cell><Data ss:Type="String">Float label which will be displayed when Inventory is full</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="Boolean">1</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell><Data ss:Type="String">Common/Button_Next</Data></Cell>
+    <Cell><Data ss:Type="String">Text</Data></Cell>
+    <Cell><Data ss:Type="String">Next</Data></Cell>
+    <Cell><Data ss:Type="String">下一步</Data></Cell>
+    <Cell><Data ss:Type="String">次へ</Data></Cell>
+    <Cell><Data ss:Type="String">Common button for next step in navigation</Data></Cell>
+    <Cell><Data ss:Type="Number">5</Data></Cell>
+    <Cell><Data ss:Type="Number">4</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+    <ValidPrinterInfo/>
+    <PaperSizeIndex>9</PaperSizeIndex>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>1</ActiveRow>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+  <DataValidation xmlns="urn:schemas-microsoft-com:office:excel">
+   <Range>R4C2:R38C2,R2C2:R3C2</Range>
+   <Type>List</Type>
+   <CellRangeList/>
+   <Value>&quot;Text,Image&quot;</Value>
+  </DataValidation>
+ </Worksheet>
+</Workbook>

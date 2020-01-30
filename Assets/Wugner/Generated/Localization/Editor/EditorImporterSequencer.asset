@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1493f82d90b8f0e4a864b3d633df7bf6, type: 3}
   m_Name: EditorImporterSequencer
   m_EditorClassIdentifier: 
-  _openXmlfileOrFolderPaths: []
-  _csvfileOrFolderPaths: []
+  _openXmlTableFileOrFolderPaths:
+  - Wugner/Localization/Examples/TestXml.xml
+  _csvTableFileOrFolderPaths: []
   _xmlArrayfileOrFolderPaths: []

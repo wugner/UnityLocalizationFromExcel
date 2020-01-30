@@ -105,5 +105,10 @@ namespace Wugner.OpenXml
         {
             return string.Format("ExcelCell:[header:{0}, content:{1}, row:{3}, column:{4}]", this.Header, this._content, this._row, this._column); ;
         }
+
+        public void SetValue(string v)
+        {
+            this._content = v;
+        }
     }	
 }

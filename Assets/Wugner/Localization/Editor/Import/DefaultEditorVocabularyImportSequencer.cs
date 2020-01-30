@@ -70,7 +70,7 @@ namespace Wugner.Localize.Editor
 				}
 			}
 
-			return fileOrFolderPaths;
+			return filePaths;
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace Wugner.Localize.Editor
 				var text = ((LocalizationText)target).GetComponent<Text>();
 				text.text = entry.Content;
 
-				var font = string.IsNullOrEmpty(entry.FontName) ? GetDefaultFont(language) : GetFont(entry.FontName);
+				var font = string.IsNullOrEmpty(entry.Font) ? GetDefaultFont(language) : GetFont(entry.Font);
 				if (font != null)
 					text.font = font;
 			}

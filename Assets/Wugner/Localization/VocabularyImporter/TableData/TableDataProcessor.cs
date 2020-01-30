@@ -13,10 +13,13 @@ namespace Wugner.Localize.Importer
 
 		private Dictionary<string, string> _headerToField = new Dictionary<string, string>()
 		{
-			{ "TYPE", "Type" },
-			{ "REMARK", "Remark" },
-			{ "CONTENT", "Content" },
-			{ "FONT", "Font" },
+			{ "id", "ID" },
+			{ "type", "Type" },
+			{ "remark", "Remark" },
+			{ "content", "Content" },
+			{ "font", "Font" },
+			{ "size", "Size" },
+			{ "extra", "Extra" }
 		};
 
 		public List<RawVocabularyEntry> ParseToRawEntries(List<string> header, IEnumerable<List<string>> body)
@@ -32,7 +35,7 @@ namespace Wugner.Localize.Importer
 
 					if (dict.ContainsKey(h))
 					{
-						throw new System.Exception($"Duplicate header {h}");
+						throw new Exception($"Duplicate header {h}");
 					}
 					dict.Add(h, b);
 				}
@@ -53,7 +56,7 @@ namespace Wugner.Localize.Importer
 				sharedData.Clear();
 				languageToEntry.Clear();
 
-				if (!row.TryGetValue(HEADER_ID, out string id))
+				if (!row.ContainsKey(HEADER_ID) && !row.ContainsKey(HEADER_ID.ToLower()))
 				{
 					throw new Exception("Can not find id in header");
 				}
@@ -97,13 +100,17 @@ namespace Wugner.Localize.Importer
 			var fieldInfo = entry.GetType().GetField(fieldName);
 			if (fieldInfo != null)
 			{
-				if (fieldInfo.FieldType == typeof(string))
+				if (string.IsNullOrEmpty(value.Trim()))
+				{
+					fieldInfo.SetValue(entry, null);
+				}
+				else if (fieldInfo.FieldType == typeof(string))
 				{
 					fieldInfo.SetValue(entry, value);
 				}
-				else if (fieldInfo.FieldType.IsEnum)
+				else if (fieldInfo.FieldType == typeof(int?))
 				{
-					var enumValue = Enum.Parse(fieldInfo.FieldType, value, true);
+					var enumValue = int.Parse(value);
 					fieldInfo.SetValue(entry, enumValue);
 				}
 				else
@@ -113,9 +120,9 @@ namespace Wugner.Localize.Importer
 			}
 			else
 			{
-				if (entry.ExtraInfo == null)
-					entry.ExtraInfo = new Dictionary<string, string>();
-				entry.ExtraInfo.Add(header, value);
+				if (entry.Extra == null)
+					entry.Extra = new Dictionary<string, string>();
+				entry.Extra.Add(header, value);
 			}
 		}
 
@@ -123,9 +130,9 @@ namespace Wugner.Localize.Importer
 		{
 			var index = headerName.LastIndexOf("_");
 			if (index <= 0 || index == headerName.Length - 1)
-				return (null, headerName);
+				return (null, headerName.ToLower());
 
-			return (headerName.Substring(index + 1), headerName.Substring(0, index));
+			return (headerName.Substring(index + 1), headerName.Substring(0, index).ToLower());
 		}
 	}
 }

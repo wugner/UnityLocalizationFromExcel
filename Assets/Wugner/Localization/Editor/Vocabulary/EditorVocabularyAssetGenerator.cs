@@ -28,7 +28,7 @@ namespace Wugner.Localize.Editor
                 UnityEditor.EditorUtility.SetDirty(vocabularyAsset);
 
                 vocabularyAsset.VocabularyEntries.Clear();
-                vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap.Cast<VocabularyEntry>());
+                vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap.Select(v => (VocabularyEntry)v));
             }
 
             AssetDatabase.SaveAssets();

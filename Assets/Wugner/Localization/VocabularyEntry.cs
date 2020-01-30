@@ -20,10 +20,10 @@ namespace Wugner.Localize
 		public string Remark;
 		public string Content;
 
-		public string FontName;
-		public int? FontSize;
+		public string Font;
+		public int? Size;
 
-		public Dictionary<string, string> ExtraInfo;
+		public Dictionary<string, string> Extra;
 		
 		public VocabularyEntry()
 		{
@@ -39,9 +39,9 @@ namespace Wugner.Localize
 				Language = entry.Language,
 				Remark = entry.Remark,
 				Content = entry.Content,
-				FontName = entry.FontName,
-				FontSize = entry.FontSize,
-				ExtraInfo = entry.ExtraInfo,
+				Font = entry.Font,
+				Size = entry.Size,
+				Extra = entry.Extra,
 			};
 		}
 
@@ -56,12 +56,12 @@ namespace Wugner.Localize
 
 		public void OnAfterDeserialize()
 		{
-			ExtraInfo = _extraInfoSerialize?.ToDictionary(info => info.Key, info => info.Value);
+			Extra = _extraInfoSerialize?.ToDictionary(info => info.Key, info => info.Value);
 		}
 
 		public void OnBeforeSerialize()
 		{
-			_extraInfoSerialize = ExtraInfo?.Select(kv => new VocabularyExtrInfo() { Key = kv.Key, Value = kv.Value }).ToList();
+			_extraInfoSerialize = Extra?.Select(kv => new VocabularyExtrInfo() { Key = kv.Key, Value = kv.Value }).ToList();
 		}
 	}
 }

@@ -34,9 +34,9 @@ namespace Wugner.Localize
                     {
                         ID = entry.ID,
                         Content = entry.Content,
-                        FontName = entry.FontName,
-                        FontSize = entry.FontSize,
-                        ExtraInfo = entry.ExtraInfo
+                        Font = entry.Font,
+                        Size = entry.Size,
+                        Extra = entry.Extra
                     });
                 }
             }

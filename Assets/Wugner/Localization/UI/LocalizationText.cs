@@ -35,10 +35,10 @@ namespace Wugner.Localize
 
 		protected override void UpdateUIComponent(RuntimeVocabularyEntry entry)
 		{
-			if (string.IsNullOrEmpty(entry.FontName))
+			if (string.IsNullOrEmpty(entry.Font))
 				TextComponent.font = Localization.CurrentDefaultFont;
 			else
-				TextComponent.font = Localization.GetFont(entry.FontName);
+				TextComponent.font = Localization.GetFont(entry.Font);
 
 			var str = _params == null || _params.Length == 0 ? entry.Content : string.Format(entry.Content, _params);
 			TextComponent.text = str;

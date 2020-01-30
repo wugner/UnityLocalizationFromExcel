@@ -9,9 +9,9 @@ namespace Wugner.Localize
 	{
 		public string ID;
 		public string Content;
-		public string FontName;
-		public int? FontSize;
-		public Dictionary<string, string> ExtraInfo;
+		public string Font;
+		public int? Size;
+		public Dictionary<string, string> Extra;
 	}
 	public interface IRuntimeVocabularyManager
 	{

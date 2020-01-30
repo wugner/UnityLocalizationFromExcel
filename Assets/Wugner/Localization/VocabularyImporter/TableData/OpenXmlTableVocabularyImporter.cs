@@ -1,9 +1,5 @@
-using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+using System.Linq;
 using Wugner.OpenXml;
 
 namespace Wugner.Localize.Importer
@@ -17,12 +13,18 @@ namespace Wugner.Localize.Importer
 			var excel = new OpenXmlParser();
 			excel.LoadXml(fileContent);
 			
-			foreach (var sheet in excel)
+			foreach (var sheet in excel.Values)
 			{
-				sheet.Value.SetHeaderAndSelectRow(1);
-				var dataWithHeader = sheet.Value.Select(row => row.ValuesWithHeader.ToDictionary(kv => kv.Key, kv => kv.Value.StringValue));
+				sheet.SetHeaderAndSelectRow(1);
+
+				List<Dictionary<string, string>> values = new List<Dictionary<string, string>>();
+				while (sheet.MoveNext())
+				{
+					values.Add(sheet.CurrentRow.StringValuesWithHeader);
+				}
+
 				var processor = new TableDataProcessor();
-				var entries = processor.ParseToRawEntries(dataWithHeader);
+				var entries = processor.ParseToRawEntries(values);
 
 				ret.AddRange(entries);
 			}

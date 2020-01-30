@@ -52,9 +52,9 @@ namespace Wugner.Localize.Importer
 			}
 			else
 			{
-				if (entry.ExtraInfo == null)
-					entry.ExtraInfo = new Dictionary<string, string>();
-				entry.ExtraInfo.Add(name, value);
+				if (entry.Extra == null)
+					entry.Extra = new Dictionary<string, string>();
+				entry.Extra.Add(name, value);
 			}
 		}
 	}

@@ -15,10 +15,16 @@ namespace Wugner.Localize
 		public string Remark;
 		public string Content;
 
-		public string FontName;
-		public int? FontSize;
+		/// <summary>
+		/// font name
+		/// </summary>
+		public string Font;
+		/// <summary>
+		/// font size
+		/// </summary>
+		public int? Size;
 
-		public Dictionary<string, string> ExtraInfo;
+		public Dictionary<string, string> Extra;
 		/// <summary>
 		/// file name or more detail info for this entry from
 		/// used for debugging output

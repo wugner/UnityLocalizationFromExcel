@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856b02db3bc253d41bd107d76dc4c86c, type: 3}
   m_Name: EditorImporterConfig
   m_EditorClassIdentifier: 
-  _idConstantNameSpace: Wugner.Localize
-  _idConstantClassName: IDS
-  _importerSequence: []
+  _idConstantClassFullName: Wugner.Localize.IDS
+  _importerSequence:
+  - {fileID: 11400000, guid: 1ccf18f99ac0add4bad7730a86c4ffd6, type: 2}
