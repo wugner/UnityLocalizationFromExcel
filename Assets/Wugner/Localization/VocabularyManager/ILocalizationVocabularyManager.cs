@@ -10,6 +10,8 @@ namespace Wugner.Localize
 		public string ID;
 		public string Content;
 		public string FontName;
+		public int? FontSize;
+		public Dictionary<string, string> ExtraInfo;
 	}
 	public interface ILocalizationVocabularyManager
 	{

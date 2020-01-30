@@ -5,7 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
     [InitializeOnLoad]
 	public class EditorLocalizationInitializer
@@ -16,7 +16,7 @@ namespace Wugner.Localize
 				return;
 
 			EditorLocalUtility.GetOrCreateConfig();
-            EditorLocalUtility.GetEditorVocalbularyImportConfig();
+            EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
             EditorVocabularyEntriesManager.Reload();
 		}
 
@@ -28,47 +28,15 @@ namespace Wugner.Localize
         }
 
         [MenuItem("Localization/ReloadImportFiles")]
-        static void ReimportVocabularyFiles()
+        private static void ReimportVocabularyFiles()
 		{
             var merger = new Importer.VocabularyMerger();
-            var importerConfig = EditorLocalUtility.GetEditorVocalbularyImportConfig();
+            var config = EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
 
-            foreach (var (type, filePaths) in importerConfig.GetImportersInfo())
+            foreach(var seq in config.ImporterSequence)
             {
-                var importer = Activator.CreateInstance(type);
-                foreach(var p in filePaths)
-                {
-                    if (importer is ITextVocabularyImporter textImporter)
-                    {
-                        try
-                        {
-                            var text = File.ReadAllText(p);
-                            var entries = textImporter.Import(text);
-                            entries.ForEach(e => e.SourceInfo = p);
-                            merger.Add(entries);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogWarning("Error in read file: " + p);
-                            Debug.LogWarning(e.ToString());
-                        }
-                    }
-                    else if (importer is IBinaryVocabularyImporter binaryImporter)
-                    {
-                        try
-                        {
-                            var bytes = File.ReadAllBytes(p);
-                            var entries = binaryImporter.Import(bytes);
-                            entries.ForEach(e => e.SourceInfo = p);
-                            merger.Add(entries);
-                        }
-                        catch(Exception e)
-                        {
-                            Debug.LogWarning("Error in read file: " + p);
-                            Debug.LogWarning(e.ToString());
-                        }
-                    }
-                }
+                var entries = seq.Import();
+                merger.Add(entries);
             }
 
             foreach (var err in merger.Errors)
@@ -99,7 +67,7 @@ namespace Wugner.Localize
 
         static void GenerateIdConstantSourceFile(RawVocabularyEntryCollection vocabularyCollection)
         {
-            var importerConfig = EditorLocalUtility.GetEditorVocalbularyImportConfig();
+            var importerConfig = EditorLocalUtility.GetOrCreateEditorLocalizeConfig();
             EditorConstantFileGenerator.CreateSourceFile(vocabularyCollection, importerConfig.IdConstantNameSpace, importerConfig.IdConstantClassName);
         }
     }

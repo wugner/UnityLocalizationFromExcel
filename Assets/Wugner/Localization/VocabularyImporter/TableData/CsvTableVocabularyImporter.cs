@@ -1,14 +1,10 @@
 using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
-using Wugner.OpenXml;
+using System.Linq;
 
 namespace Wugner.Localize.Importer
 {
-	public class CsvVocabularyImporter : ITextVocabularyImporter
+	public class CsvTableVocabularyImporter : ITextVocabularyImporter
 	{
 		public List<RawVocabularyEntry> Import(string fileContent)
 		{
@@ -43,7 +39,7 @@ namespace Wugner.Localize.Importer
 			}
 
 			var processor = new TableDataProcessor();
-			var entries = processor.Analyze(header, body);
+			var entries = processor.ParseToRawEntries(header, body);
 
 			return entries;
 		}

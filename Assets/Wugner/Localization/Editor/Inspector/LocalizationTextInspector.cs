@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
 	[CustomEditor(typeof(LocalizationText))]
 	public class LocalizationTextInspector : BaseLocalizationUIInspector

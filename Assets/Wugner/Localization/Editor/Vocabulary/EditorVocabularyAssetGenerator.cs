@@ -5,7 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
     public interface IEditorVocabularyAssetGenerator
     {
@@ -30,22 +30,7 @@ namespace Wugner.Localize
                 vocabularyAsset.VocabularyEntries.Clear();
                 vocabularyAsset.VocabularyEntries.AddRange(vocabularyMap.Cast<VocabularyEntry>());
             }
-            //var config = EditorUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
-            //foreach (var map in vocabularyMapList)
-            //{
-            //    var index = config.LanguageSettings.FindIndex(s => s.Language == map.Language);
-            //    if (index < 0)
-            //    {
-            //        config.LanguageSettings.Add(new LocalizationConfig.LanguageInfo()
-            //        {
-            //            Language = map.Language,
-            //            DefaultFont = Resources.Load("Library/unity default resources/Arial") as Font
-            //        });
-            //    }
-            //}
-            //config.LanguageSettings.RemoveAll(s => vocabularyMapList.All(m => m.Language != s.Language));
 
-            //UnityEditor.EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
         }
     }

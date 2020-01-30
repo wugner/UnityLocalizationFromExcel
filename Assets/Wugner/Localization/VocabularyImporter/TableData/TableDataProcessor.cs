@@ -2,7 +2,6 @@ using Wugner.OpenXml;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using ExcelDataReader;
 using System.Linq;
 using System;
 
@@ -20,7 +19,7 @@ namespace Wugner.Localize.Importer
 			{ "FONT", "Font" },
 		};
 
-		public List<RawVocabularyEntry> Analyze(List<string> header, IEnumerable<List<string>> body)
+		public List<RawVocabularyEntry> ParseToRawEntries(List<string> header, IEnumerable<List<string>> body)
 		{
 			var bodyDataWithHeader = new List<Dictionary<string, string>>();
 			foreach (var bodyRow in body)
@@ -39,10 +38,10 @@ namespace Wugner.Localize.Importer
 				}
 				bodyDataWithHeader.Add(dict);
 			}
-			return Analyze(bodyDataWithHeader);
+			return ParseToRawEntries(bodyDataWithHeader);
 		}
 
-		public List<RawVocabularyEntry> Analyze(IEnumerable<Dictionary<string, string>> bodyDataWithHeader)
+		public List<RawVocabularyEntry> ParseToRawEntries(IEnumerable<Dictionary<string, string>> bodyDataWithHeader)
 		{
 			var ret = new List<RawVocabularyEntry>();
 

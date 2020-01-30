@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEditor;
 using System;
-using Wugner.Localize;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
-namespace Wugner
+namespace Wugner.Localize.Editor
 {
 	public class EditorLocalUtility
 	{
@@ -23,36 +23,22 @@ namespace Wugner
 			}
 			return ret;
 		}
-
-		public static ScriptableObject LoadOrCreateAsset(string path, Type type)
-		{
-			var ret = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
-			if (ret == null)
-			{
-				var folderPath = path.Substring(0, path.LastIndexOf('/'));
-				if (!AssetDatabase.IsValidFolder(folderPath))
-				{
-					System.IO.Directory.CreateDirectory(Application.dataPath + "/" + folderPath);
-					AssetDatabase.Refresh();
-				}
-				ret = ScriptableObject.CreateInstance(type);
-				AssetDatabase.CreateAsset(ret, path);
-			}
-			return ret;
-		}
-
+		
 		public static LocalizationConfig GetOrCreateConfig()
 		{
-			return EditorLocalUtility.LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
+			return LoadOrCreateAsset<LocalizationConfig>(Constant.ASSETPATH_CONFIG);
 		}
-		public static IEditorVocabularyImportConfig GetEditorVocalbularyImportConfig()
+		public static EditorLocalizeConfig GetOrCreateEditorLocalizeConfig()
 		{
-			if (!(EditorLocalUtility.LoadOrCreateAsset(Constant.ASSETPATH_IMPORTER_CONFIG, typeof(EditorVocabularyImportConfig))
-				is IEditorVocabularyImportConfig importerConfig))
+			var config = AssetDatabase.LoadAssetAtPath<EditorLocalizeConfig>(Constant.ASSETPATH_EDITOR_CONFIG);
+			if (config == null)
 			{
-				throw new Exception($"Asset {Constant.ASSETPATH_IMPORTER_CONFIG} does not implement IEditorVocabularyImportConfig!");
+				config = LoadOrCreateAsset<EditorLocalizeConfig>(Constant.ASSETPATH_EDITOR_CONFIG);
+				var importSeq = LoadOrCreateAsset<DefaultEditorVocabularyImportSequencer>(Constant.ASSETPATH_EDITOR_IMPORTSEQ);
+				config.ImporterSequence = new List<EditorVocabularyImportSequencer>() { importSeq };
+				EditorUtility.SetDirty(config);
 			}
-			return importerConfig;
+			return config;
 		}
 	}
 }

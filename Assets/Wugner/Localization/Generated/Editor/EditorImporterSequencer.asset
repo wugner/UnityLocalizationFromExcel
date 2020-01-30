@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 856b02db3bc253d41bd107d76dc4c86c, type: 3}
-  m_Name: VocabularyImporterConfig
+  m_Script: {fileID: 11500000, guid: 1493f82d90b8f0e4a864b3d633df7bf6, type: 3}
+  m_Name: EditorImporterSequencer
   m_EditorClassIdentifier: 
-  _idConstantNameSpace: Wugner.Localize
-  _idConstantClassName: IDS
   _openXmlfileOrFolderPaths: []
   _csvfileOrFolderPaths: []
+  _xmlArrayfileOrFolderPaths: []

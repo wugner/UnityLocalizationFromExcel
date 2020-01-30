@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
 	[CustomEditor(typeof(LocalizationImage))]
 	public class LocalizationImageInspector : BaseLocalizationUIInspector
@@ -15,7 +15,7 @@ namespace Wugner.Localize
 			try
 			{
 				var entry = entryInMultiLanguage.Get(language);
-				var image = ((LocalizationText)target).GetComponent<Image>();
+				var image = ((Component)target).GetComponent<Image>();
 				image.sprite = Resources.Load<Sprite>(entry.Content);
 			}
 			catch (Exception e)

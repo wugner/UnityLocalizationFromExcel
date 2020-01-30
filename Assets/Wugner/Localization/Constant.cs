@@ -12,6 +12,7 @@ namespace Wugner.Localize
 		public const string ASSETPATH_CONFIG = "Assets/Wugner/Localization/Generated/Resources/LocalizationConfig.asset";
 		public const string ASSETPATH_VOCABULARY = "Assets/Wugner/Localization/Generated/Resources/Vocabularies_{0}.asset";
 
-		public const string ASSETPATH_IMPORTER_CONFIG = "Assets/Wugner/Localization/Generated/Editor/VocabularyImporterConfig.asset";
+		public const string ASSETPATH_EDITOR_CONFIG = "Assets/Wugner/Localization/Generated/Editor/EditorImporterConfig.asset";
+		public const string ASSETPATH_EDITOR_IMPORTSEQ = "Assets/Wugner/Localization/Generated/Editor/EditorImporterSequencer.asset";
 	}
 }

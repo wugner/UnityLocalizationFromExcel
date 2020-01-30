@@ -5,7 +5,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
 	public class EditorConstantFileGenerator
 	{

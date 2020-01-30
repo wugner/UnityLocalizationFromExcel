@@ -5,9 +5,9 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
-	public abstract class BaseLocalizationUIInspector : Editor
+	public abstract class BaseLocalizationUIInspector : UnityEditor.Editor
 	{
 		public override void OnInspectorGUI()
 		{

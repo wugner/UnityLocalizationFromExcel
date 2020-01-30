@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using System.Linq;
 using System.Collections;
-using Wugner.Localize.Importer;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-namespace Wugner.Localize
+namespace Wugner.Localize.Editor
 {
 	public class EditorVocabularyEntriesManager
 	{

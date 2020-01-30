@@ -10,18 +10,18 @@ namespace Wugner.Localize.Importer
 		public string Language;
 		public string FieldName;
 
-		public string SrcInfoA;
+		public string SourceInfoA;
 		public string ValueA;
-		public string SrcInfoB;
+		public string SourceInfoB;
 		public string ValueB;
 
 		public override string ToString()
 		{
 			return $"Same id[{ID}] language[{Language}] field[{FieldName}] but different value. \n"
 				+ $"ValueA: {ValueA} \n"
-				+ $"SrcInfoA: {SrcInfoA} \n"
+				+ $"SrcInfoA: {SourceInfoA} \n"
 				+ $"ValueB: {ValueB} \n"
-				+ $"SrcInfoB: {SrcInfoB} \n";
+				+ $"SrcInfoB: {SourceInfoB} \n";
 		}
 	}
 
@@ -35,6 +35,17 @@ namespace Wugner.Localize.Importer
 		{
 			foreach (var from in entries)
 			{
+				if (string.IsNullOrEmpty(from.ID) || string.IsNullOrEmpty(from.Language))
+				{
+					Errors.Add(new MergeError()
+					{
+						ID = from.ID,
+						Language = from.Language,
+						SourceInfoA = from.SourceInfo
+					});
+					continue;
+				}
+
 				if (!MergedDataByLanguage.TryGetValue(from.Language, out var entryCollection))
 				{
 					entryCollection = new RawVocabularyEntryCollection(from.Language);
@@ -57,7 +68,7 @@ namespace Wugner.Localize.Importer
 			var fields = typeof(RawVocabularyEntry).GetFields();
 			foreach (var f in fields)
 			{
-				if (f.Name == "ID" || f.Name == "Language" || f.Name == "srcInfo")
+				if (f.Name == "ID" || f.Name == "Language" || f.Name == "SourceInfo")
 					continue;
 
 				var fromValue = f.GetValue(from);
@@ -93,9 +104,9 @@ namespace Wugner.Localize.Importer
 									ID = from.ID,
 									Language = from.Language,
 									FieldName = f.Name + "." + fromDictKv.Key,
-									SrcInfoA = from.SourceInfo,
+									SourceInfoA = from.SourceInfo,
 									ValueA = toDictValue,
-									SrcInfoB = to.SourceInfo,
+									SourceInfoB = to.SourceInfo,
 									ValueB = fromDictKv.Value
 								});
 							}
@@ -120,14 +131,15 @@ namespace Wugner.Localize.Importer
 							ID = from.ID,
 							Language = from.Language,
 							FieldName = f.Name,
-							SrcInfoA = from.SourceInfo,
+							SourceInfoA = from.SourceInfo,
 							ValueA = fromValue.ToString(),
-							SrcInfoB = to.SourceInfo,
+							SourceInfoB = to.SourceInfo,
 							ValueB = toValue.ToString()
 						});
 					}
 				}
 			}
+			to.SourceInfo = to.SourceInfo + ";" + from.SourceInfo;
 		}
 
 		private (bool success, object data) MergeData(object from, object to)
