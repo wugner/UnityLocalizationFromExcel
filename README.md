@@ -101,3 +101,5 @@ The class name of your custom vocabulary manager.
 - **Custom Editor Vocabulary Importer**  
 The class name of your custom editor vocabulary importer.
 
+# License
+MIT
